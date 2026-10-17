@@ -7,7 +7,8 @@ com aprovação do usuário.
 ## O projeto
 
 Motor de cálculo de reembolso de despesas corporativas. CLI que lê um JSON de
-despesas e emite um JSON com o valor reembolsável e a justificativa de cada item.
+despesas e emite um JSON com o valor reembolsável e a justificativa de cada decisão,
+no formato definido na spec.
 
 - Interface fixa: `<comando> calcular --input <entrada.json> --output <saida.json>`.
 - Formato de entrada fixo: `exemplos/despesas-exemplo.json`.
@@ -103,7 +104,8 @@ despesas e emite um JSON com o valor reembolsável e a justificativa de cada ite
 - Toda mudança na `spec.md` gera uma entrada `D-NNN` em `DECISIONS.md`, no
   formato do arquivo (gatilho, o que mudou, por quê, o que invalidou, tasks
   afetadas, custo), em ordem cronológica inversa.
-- A partir de quando uma alteração da spec passa a exigir entrada: **PENDENTE**.
+- Marco inicial: a versão de referência da spec é o commit `39baa6e`. Toda alteração
+  da spec a partir dele exige entrada.
 
 ## Evidências e sessões
 

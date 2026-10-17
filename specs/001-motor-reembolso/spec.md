@@ -51,6 +51,22 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Origem:** política do RH, itens 1 e 2; AMB-001.
 **Aceite:** duas despesas de alimentação em 2026-07-03, de R$ 72,50 e R$ 38,00, formam um total diário de R$ 110,50, que excede o limite de R$ 60,00 em R$ 50,50. Uma despesa de transporte urbano na mesma data não entra nessa soma.
 
+### RN-002 — Teto de reembolso
+
+**Regra:** o valor reembolsado sujeito a um limite nunca excede esse limite. Se o valor sujeito ao limite é menor ou igual ao limite, é reembolsado integralmente; se é maior, reembolsa-se exatamente o valor do limite. Para alimentação e transporte urbano, o valor sujeito ao limite é a soma do dia (RN-001); para hospedagem, a unidade depende de AMB-003. Esta regra não impede reduções previstas em outras regras.
+**Origem:** política do RH, item 4; AMB-004.
+**Aceite:**
+- alimentação com total de R$ 61,00 no dia → R$ 60,00 reembolsados no dia; R$ 1,00 não reembolsado;
+- alimentação com total de R$ 60,00 no dia → R$ 60,00 reembolsados no dia;
+- transporte urbano com total de R$ 80,01 no dia → R$ 80,00 reembolsados no dia; R$ 0,01 não reembolsado;
+- alimentação em 2026-07-03 com total de R$ 110,50 → R$ 60,00 reembolsados no dia; o valor é registrado no total do dia, sem divisão entre os itens (RN-003).
+
+### RN-003 — Reembolso apurado por dia
+
+**Regra:** para alimentação e transporte urbano, o valor reembolsado é apurado e apresentado no total da categoria no dia. Nenhum valor reembolsado é atribuído individualmente aos itens que compõem esse total; cada item é apresentado com sua situação e a indicação do total do dia a que pertence. Quando o total do dia tem um único item, o valor do dia corresponde a esse item.
+**Origem:** AMB-002.
+**Aceite:** em 2026-07-03, as despesas de alimentação de R$ 72,50 e R$ 38,00 aparecem como itens do total de alimentação do dia; o total do dia é R$ 110,50 e o valor reembolsado do dia é R$ 60,00; nenhum valor reembolsado individual é atribuído a esses itens.
+
 ---
 
 ## 6. Ambiguidades identificadas e decisões
@@ -72,10 +88,10 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Ref. levantamento:** A-02
 **Texto original do RH:** "R$ 60 por dia", "R$ 80 por dia", "Despesas acima do limite são reembolsadas parcialmente."
 **O que não está claro:** quando a soma do dia excede o limite e a saída mostra o valor de cada item, quanto do limite cabe a cada despesa. Leituras: na ordem em que aparecem na entrada; a maior primeiro; a menor primeiro; proporcional ao valor.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
-**Depende de:** AMB-001 (decidida: soma diária), AMB-004.
+**Decisão:** para alimentação e transporte urbano, o valor reembolsado é apurado no total da categoria no dia (RN-001, RN-002), sem divisão entre os itens que compõem esse total. Cada item é apresentado com sua situação e com a indicação do total do dia de que faz parte.
+**Justificativa:** a política fixa o limite por dia; o valor reembolsável é, portanto, do dia, e reparti-lo entre os itens exigiria um critério que a política não fornece.
+**Regra afetada:** RN-003
+**Depende de:** AMB-001 e AMB-004 (decididas).
 **No exemplo:** d-001 + d-002; d-003 + d-004.
 
 ### AMB-003 — Hospedagem com várias noites em um único item
@@ -91,10 +107,10 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 ### AMB-004 — O que é "reembolsadas parcialmente"
 **Ref. levantamento:** A-04
 **Texto original do RH:** "Despesas acima do limite são reembolsadas parcialmente."
-**O que não está claro:** qual parte é reembolsada. Leituras: paga até o limite e corta o excedente; paga outra fração; recusa o item. Fronteira: se "acima do limite" significa estritamente maior que o limite.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**O que não está claro:** qual parte é reembolsada (até o limite, outra fração ou nada) e se "acima do limite" inclui o valor igual ao limite.
+**Decisão:** quando o valor sujeito ao limite é maior que o limite (por exemplo, R$ 60,01 em alimentação), reembolsa-se até o valor do limite e o excedente não é reembolsado. Valor igual ao limite não está acima dele e é reembolsado integralmente.
+**Justificativa:** os valores da política funcionam como teto de gasto: paga-se até o teto, nunca acima dele.
+**Regra afetada:** RN-002
 **No exemplo:** total de 2026-07-03 (d-001 + d-002); total de 2026-07-06 (d-003 + d-004); d-010; d-013; d-014 (R$ 61,00).
 
 ### AMB-005 — Fronteira de "acima de R$ 100" para nota fiscal
@@ -114,6 +130,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-016.
+**Efeito de AMB-002:** não existe valor pago por item; a leitura "valor depois do limite" só se aplica ao total do dia.
 **No exemplo:** d-004 (R$ 100,01, limite de R$ 80,00); total de 2026-07-06 (R$ 200,01); d-013 (R$ 690,00, sem nota).
 
 ### AMB-007 — Consequência da falta de nota fiscal obrigatória
@@ -124,6 +141,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-031.
+**Efeito de AMB-002:** recusar o item ou limitá-lo a R$ 100,00 altera quanto ele contribui para o total do dia.
 **No exemplo:** d-004; d-013.
 
 ### AMB-008 — O que caracteriza colaborador "em viagem"
@@ -194,6 +212,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
+**Efeito de AMB-002:** não há sobra de centavos a repartir entre itens.
 **No exemplo:** d-011 (R$ 33,333).
 
 ### AMB-015 — Valores negativos (estornos)
@@ -204,6 +223,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-001 (decidida: soma diária), AMB-032.
+**Efeito de AMB-002:** a leitura "associar a uma despesa original" não se aplica a categorias com limite diário; "abater do total do dia" continua possível.
 **No exemplo:** d-009 (−R$ 45,00, transporte urbano, sozinho em 2026-07-11).
 
 ### AMB-016 — Ordem de aplicação das regras
@@ -235,6 +255,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-003, AMB-011.
+**Efeito de AMB-002:** se a decisão for "somar", RN-003 passa a valer também para hospedagem.
 **No exemplo:** nenhum (d-010 e d-013 não se sobrepõem).
 
 ### AMB-019 — Dias não úteis
@@ -290,6 +311,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE (será resolvida na §4)
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
+**Efeito de AMB-002:** a justificativa do item cita o total do dia de que faz parte; o total do dia precisa de justificativa própria.
 **No exemplo:** todos.
 
 ### AMB-025 — Item com mais de um motivo de recusa ou redução
@@ -318,6 +340,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE (será resolvida na §4)
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
+**Efeito de AMB-002:** parcialmente decidida — a saída precisa ter o total por categoria e dia para alimentação e transporte urbano; os demais totais seguem pendentes.
 **No exemplo:** todos.
 
 ### AMB-028 — Alimentação durante hospedagem
@@ -358,6 +381,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Afeta:** AMB-007, AMB-010, AMB-012, AMB-017.
+**Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
 
 ### AMB-032 — Entrada inválida versus item recusado
 **Ref. levantamento:** ponto transversal da revisão
@@ -400,6 +424,7 @@ O sistema está pronto quando:
 ## 10. O que fica em aberto
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
-- O valor reembolsado de cada item quando o total do dia excede o limite depende de AMB-002 e AMB-004.
+- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
+- A unidade do limite de hospedagem (por item ou por noite) depende de AMB-003.
 - Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
 - O valor do limite pode ser ampliado para colaborador em viagem (AMB-008 e AMB-009).

@@ -10,33 +10,16 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
-## D-002 — <título curto> · `<data>`
+## D-001 — Teto de reembolso e valor apurado por dia · 2026-10-17
 
-**Gatilho:** <o que provocou: envelope lacrado / erro descoberto na implementação /
-ambiguidade que só apareceu ao testar / o Claude apontou uma contradição>
+**Gatilho:** decisões de AMB-004 e AMB-002 tomadas após a versão de referência da spec (commit `39baa6e`).
 
-**O que mudou na spec:** <de → para, citando o ID da regra>
+**O que mudou na spec:** AMB-004: PENDENTE → reembolso até o limite, excedente não reembolsado, valor igual ao limite integral (RN-002 criada). AMB-002: PENDENTE → valor reembolsado apurado no total da categoria no dia, sem divisão entre itens (RN-003 criada). Notas de efeito em AMB-006, AMB-007, AMB-014, AMB-015, AMB-018, AMB-024, AMB-027 e AMB-031; §10 atualizada.
 
-**Por quê:**
+**Por quê:** AMB-004: os valores da política funcionam como teto de gasto. AMB-002: a política fixa o limite por dia; o valor reembolsável é, portanto, do dia, e reparti-lo entre os itens exigiria um critério que a política não fornece.
 
-**O que isso invalidou:** <requisitos, decisões técnicas, testes que caíram>
+**O que isso invalidou:** nenhuma implementação existente. Deixam de se aplicar a categorias com limite diário as leituras "valor depois do limite" (AMB-006) e "associar a uma despesa original" (AMB-015). A descrição da saída em `CLAUDE.md` foi ajustada.
 
-**Tasks afetadas:** <as que precisaram ser refeitas + as novas criadas>
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
 
-**Custo:** <quantos arquivos tocados, quanto tempo>
-
----
-
-## D-001 — <título curto> · `<data>`
-
-**Gatilho:**
-
-**O que mudou na spec:**
-
-**Por quê:**
-
-**O que isso invalidou:**
-
-**Tasks afetadas:**
-
-**Custo:**
+**Custo:** 3 arquivos (`spec.md`, `CLAUDE.md`, `DECISIONS.md`).
