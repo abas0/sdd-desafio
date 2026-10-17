@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-002 — Teto de hospedagem por diária e formato de entrada fixo · 2026-10-17
+
+**Gatilho:** decisões de AMB-033 e AMB-003.
+
+**O que mudou na spec:** AMB-033: PENDENTE → a entrada não recebe campos além dos do exemplo. AMB-003: PENDENTE → teto de hospedagem de R$ 250,00 por diária, com o número de diárias lido na descrição e uma diária quando não houver número válido (RN-004 criada). Notas de efeito em AMB-008, AMB-010 e AMB-018; §10 atualizada.
+
+**Por quê:** AMB-033: o formato de entrada é fixo pelo enunciado. AMB-003: a política fixa o teto por diária, e hospedagens como aluguel por temporada são pagas de uma vez; o teto precisa acompanhar o número de diárias da estadia.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "um lançamento por diária" e "campo opcional com o número de diárias" (AMB-003), "exigir um dado que a entrada não traz" (AMB-008) e "data de lançamento" (AMB-010).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-001 — Teto de reembolso e valor apurado por dia · 2026-10-17
 
 **Gatilho:** decisões de AMB-004 e AMB-002 tomadas após a versão de referência da spec (commit `39baa6e`).

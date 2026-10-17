@@ -67,6 +67,20 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Origem:** AMB-002.
 **Aceite:** em 2026-07-03, as despesas de alimentação de R$ 72,50 e R$ 38,00 aparecem como itens do total de alimentação do dia; o total do dia é R$ 110,50 e o valor reembolsado do dia é R$ 60,00; nenhum valor reembolsado individual é atribuído a esses itens.
 
+### RN-004 — Teto de hospedagem por diária
+
+**Regra:** o teto de reembolso de um item de hospedagem é R$ 250,00 multiplicado pelo número de diárias, determinado conforme AMB-003. O teto é aplicado conforme RN-002.
+**Origem:** política do RH, item 3; AMB-003.
+**Aceite:**
+- "Hotel Rio - 2 diarias", R$ 480,00 → 2 diárias, teto R$ 500,00, R$ 480,00 dentro do teto;
+- "Airbnb 3 noites", R$ 690,00 → 3 diárias, teto R$ 750,00, R$ 690,00 dentro do teto;
+- "Pousada - duas Diárias", R$ 600,00 → 2 diárias, teto R$ 500,00, R$ 500,00 reembolsados;
+- "Hotel - 2 diárias e 1 noite", R$ 700,00 → 3 diárias, teto R$ 750,00, R$ 700,00 dentro do teto;
+- "Hotel - 2 diárias + meia diária", R$ 600,00 → "meia" ignorada, 2 diárias, teto R$ 500,00, R$ 500,00 reembolsados;
+- "Hotel 3 estrelas", R$ 300,00 → nenhum número antes de "diária" ou "noite" → 1 diária, R$ 250,00 reembolsados;
+- "Hotel - 0 diárias", R$ 300,00 → número inválido → 1 diária, R$ 250,00 reembolsados;
+- "Hotel - meia diária", R$ 150,00 → número inválido → 1 diária, R$ 150,00 dentro do teto.
+
 ---
 
 ## 6. Ambiguidades identificadas e decisões
@@ -98,10 +112,16 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Ref. levantamento:** A-03
 **Texto original do RH:** "Hospedagem tem limite de R$ 250 por diária."
 **O que não está claro:** se o limite é R$ 250 por item ou R$ 250 multiplicado pelo número de noites. A entrada não informa o número de noites; ele aparece só no texto livre da descrição. O formato de entrada é fixo; hotel e aluguel por temporada chegam igualmente como hospedagem.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
-**Depende de:** AMB-033.
+**Decisão:** o limite de hospedagem é de R$ 250,00 por diária; o teto do item é R$ 250,00 multiplicado pelo número de diárias. O número de diárias é lido na descrição:
+- conta o número escrito imediatamente antes da palavra "diária" ou "noite", em qualquer forma — singular ou plural, maiúsculas ou minúsculas, com ou sem acento, inclusive "diária(s)" e "noite(s)";
+- o número pode estar em algarismos ("2 diarias") ou por extenso ("duas diarias"), sem limite máximo;
+- só é válido um número inteiro maior ou igual a 1; meia, zero ou valor negativo são ignorados;
+- se houver mais de uma ocorrência válida, os números são somados ("2 diárias e 1 noite" = 3 diárias);
+- se a descrição não trouxer nenhum número válido, considera-se uma diária.
+
+**Justificativa:** a política fixa o teto por diária, e hospedagens como aluguel por temporada são pagas de uma vez; o teto precisa acompanhar o número de diárias da estadia.
+**Regra afetada:** RN-004
+**Depende de:** AMB-033 (decidida).
 **No exemplo:** d-010 ("2 diarias", R$ 480,00); d-013 ("3 noites", R$ 690,00).
 
 ### AMB-004 — O que é "reembolsadas parcialmente"
@@ -151,7 +171,8 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
-**Depende de:** AMB-033.
+**Depende de:** AMB-033 (decidida).
+**Efeito de AMB-033:** a leitura "exigir um dado que a entrada não traz" fica descartada.
 **No exemplo:** d-003 ("Corrida aeroporto"); d-010 ("Hotel Rio"); d-011 (café no hotel); d-013.
 
 ### AMB-009 — Alcance e período da ampliação de 50%
@@ -171,7 +192,9 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
-**Depende de:** AMB-031, AMB-033.
+**Depende de:** AMB-031, AMB-033 (decidida).
+**Efeito de AMB-033:** a leitura "data de lançamento" fica descartada, pois a entrada não traz essa data.
+**Efeito de AMB-003:** uma hospedagem de várias diárias pode ter diárias fora do período de competência.
 **No exemplo:** d-008 (2026-04-15, "lancado com atraso"); d-014 (2026-07-31, último dia).
 
 ### AMB-011 — Critério de duplicata
@@ -256,6 +279,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-003, AMB-011.
 **Efeito de AMB-002:** se a decisão for "somar", RN-003 passa a valer também para hospedagem.
+**Efeito de AMB-003:** uma hospedagem de várias diárias cobre várias datas e pode se sobrepor a outra mesmo com datas informadas diferentes.
 **No exemplo:** nenhum (d-010 e d-013 não se sobrepõem).
 
 ### AMB-019 — Dias não úteis
@@ -396,9 +420,9 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Ref. levantamento:** ponto transversal da revisão
 **Texto original do RH:** nenhum; o enunciado exige respeitar o formato de entrada do exemplo.
 **O que não está claro:** se uma informação opcional a mais na entrada (número de noites, indicação de viagem, data de lançamento) respeita ou não o formato exigido.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a entrada não recebe campos além dos presentes em `exemplos/despesas-exemplo.json`.
+**Justificativa:** o formato de entrada é fixo pelo enunciado.
+**Regra afetada:** nenhuma; restringe as opções de AMB-003, AMB-008 e AMB-010.
 **Afeta:** AMB-003, AMB-008, AMB-010.
 
 ---
@@ -424,7 +448,5 @@ O sistema está pronto quando:
 ## 10. O que fica em aberto
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
-- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
-- A unidade do limite de hospedagem (por item ou por noite) depende de AMB-003.
-- Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
+- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).- Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
 - O valor do limite pode ser ampliado para colaborador em viagem (AMB-008 e AMB-009).
