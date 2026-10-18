@@ -22,7 +22,7 @@
 ## 3. Fora de escopo
 
 - Não gerencia o fluxo de revisão de despesas duplicadas: prazo, responsável e desfecho da revisão (ver AMB-012).
-- Não gerencia a correção e o reenvio de despesas lançadas com categoria fora da política: quem corrige e em que prazo (ver AMB-017).
+- Não gerencia a correção e o reenvio de despesas recusadas por categoria fora da política ou por descrição incompatível com a categoria: quem corrige e em que prazo (ver AMB-017, AMB-030).
 - Não oferece lista de categorias no momento do lançamento da despesa; isso pertence ao sistema que gera a entrada (ver AMB-013).
 - Não trata despesa em moeda estrangeira; todos os valores da entrada são considerados em reais (ver AMB-022).
 - Não aplica teto total de reembolso por período nem por colaborador (ver AMB-023).
@@ -133,6 +133,36 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 - −R$ 45,005 → −R$ 45,01;
 - uma única alimentação no dia de R$ 60,004 → R$ 60,00, igual ao limite, reembolso integral (RN-002);
 - R$ 0,004 → R$ 0,00 → valor zero, recusado (RN-008).
+
+### RN-010 — Categorias da política
+
+**Regra:** as categorias da política são alimentação, transporte urbano e hospedagem. A categoria informada é reconhecida sem diferenciar maiúsculas e minúsculas, letras com e sem acento, nem espaços no início, no fim ou repetidos entre palavras; sublinhado, espaço e hífen são equivalentes. Item cuja categoria não corresponde a nenhuma delas é recusado com a justificativa "categoria fora da política", fica com valor reembolsado de R$ 0,00 e não entra em nenhuma soma do dia.
+**Origem:** política do RH, itens 1, 2, 3 e 9; AMB-013, AMB-017.
+**Aceite:**
+- d-014, "ALIMENTACAO" → alimentação; total de alimentação de 2026-07-31 de R$ 61,00 → R$ 60,00 (RN-002);
+- "Alimentação", "Transporte Urbano" e "transporte-urbano" → reconhecidas como alimentação e transporte urbano;
+- d-005, "coworking" → recusado, categoria fora da política, R$ 0,00.
+
+### RN-011 — Descrição compatível com a categoria
+
+**Regra:** item cuja descrição contém palavra associada a outra categoria e nenhuma palavra associada à sua própria categoria é recusado com a justificativa "descrição incompatível com a categoria", fica com R$ 0,00 e não entra em nenhuma soma do dia. Descrição sem palavra de nenhuma categoria não é recusada por esta regra. Palavras por categoria:
+
+| Categoria | Palavras |
+|---|---|
+| alimentação | almoço, jantar, café, lanche, refeição, restaurante, padaria |
+| transporte urbano | corrida, táxi, uber, ônibus, metrô |
+| hospedagem | hotel, pousada, hostel, airbnb, diária, noite |
+
+As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra inteira, no singular ou no plural.
+**Origem:** AMB-030.
+**Aceite:**
+- d-011, alimentação, "Cafe da manha hotel" → aceito: tem "hotel" (hospedagem), mas também "café";
+- d-004, transporte urbano, "Corrida hotel" → aceito: tem "hotel", mas também "corrida";
+- alimentação, "Hotel Copa Sul" → recusado: só tem palavra de hospedagem;
+- hospedagem, "Almoço com cliente" → recusado: só tem palavra de alimentação;
+- alimentação, "Despesa diversa" → aceito: nenhuma palavra de nenhuma categoria;
+- hospedagem, "Jantar no hotel" → aceito: tem "hotel", da própria categoria;
+- os 12 itens do exemplo com categoria da política → todos aceitos por esta regra.
 
 ---
 
@@ -278,9 +308,9 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** A-13
 **Texto original do RH:** "Categorias fora da política não são reembolsáveis."
 **O que não está claro:** se apenas as três categorias com limite estão na política ou se há outras aceitas; se variações de maiúsculas ou acentos ("ALIMENTACAO") correspondem à mesma categoria.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** só alimentação, transporte urbano e hospedagem estão na política. A categoria é reconhecida sem diferenciar maiúsculas, acentos e espaços a mais, com sublinhado, espaço e hífen equivalentes (RN-010).
+**Justificativa:** são as únicas categorias citadas na política; diferenças de grafia não mudam a categoria.
+**Regra afetada:** RN-010
 **Efeito de AMB-011:** na comparação de duplicatas, categorias são comparadas sem diferenciar maiúsculas, acentos e espaços (RN-005). Se isso também vale para reconhecer a categoria na política, a AMB-013 decide.
 **Fora de escopo relacionado:** lista de categorias no lançamento (§3).
 **No exemplo:** d-005 (coworking); d-014 (ALIMENTACAO).
@@ -322,9 +352,9 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** A-17
 **Texto original do RH:** "Categorias fora da política não são reembolsáveis."
 **O que não está claro:** o item não é reembolsado e a saída precisa justificar a decisão; falta definir como ele aparece. Leituras: recusar com justificativa; marcar como pendente de correção (categoria possivelmente lançada por engano); tratar como entrada inválida.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o item com categoria fora da política é recusado, com justificativa e R$ 0,00 (RN-010). A correção e o reenvio estão fora de escopo (§3).
+**Justificativa:** a política diz que essas categorias "não são reembolsáveis"; a recusa é a leitura direta.
+**Regra afetada:** RN-010
 **Depende de:** AMB-013, AMB-030, AMB-031, AMB-032.
 **Fora de escopo relacionado:** fluxo de correção e reenvio (§3).
 **No exemplo:** d-005; d-014, dependendo de AMB-013.
@@ -452,9 +482,14 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** L-12
 **Texto original do RH:** nenhum.
 **O que não está claro:** se a categoria informada é aceita como está ou questionada a partir da descrição (uma corrida para o aeroporto como transporte urbano; uma categoria fora da política lançada por engano).
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o item é recusado quando a descrição contém palavra associada a outra categoria e nenhuma palavra associada à categoria informada (RN-011). Descrição sem palavra de nenhuma categoria é aceita.
+**Justificativa:** a categoria define o limite aplicado; uma descrição que aponta só para outra categoria indica erro de lançamento. Exigir sempre uma palavra da categoria recusaria descrições legítimas que não usam as palavras da lista.
+**Palavras não incluídas:**
+- "99" (aplicativo de transporte): seria confundido com números na descrição ("2 diarias");
+- estacionamento e pedágio: não está claro que sejam transporte urbano;
+- coworking: não é categoria da política.
+
+**Regra afetada:** RN-011
 **Afeta:** AMB-008, AMB-013, AMB-017.
 **No exemplo:** d-003; d-005.
 

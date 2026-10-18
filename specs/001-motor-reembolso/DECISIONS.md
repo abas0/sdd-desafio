@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-005 — Lote 2: categorias da política e descrição compatível · 2026-10-18
+
+**Gatilho:** decisões de AMB-013, AMB-017 e AMB-030.
+
+**O que mudou na spec:** AMB-013: PENDENTE → só alimentação, transporte urbano e hospedagem estão na política, reconhecidas sem diferenciar maiúsculas, acentos, espaços, sublinhado e hífen (RN-010 criada). AMB-017: PENDENTE → item com categoria fora da política é recusado (RN-010). AMB-030: PENDENTE → item é recusado quando a descrição tem palavra de outra categoria e nenhuma da sua (RN-011 criada, com a lista de palavras por categoria). Item da §3 sobre correção e reenvio reescrito.
+
+**Por quê:** AMB-013: são as únicas categorias citadas na política; diferenças de grafia não mudam a categoria. AMB-017: a política diz que essas categorias "não são reembolsáveis". AMB-030: a categoria define o limite aplicado; uma descrição que aponta só para outra categoria indica erro de lançamento.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "outras categorias aceitas sem limite" (AMB-013); "pendente de correção" e "entrada inválida" (AMB-017); "categoria informada vale sem verificação" e "exigir sempre uma palavra da categoria" (AMB-030).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-004 — Lote 1: premissas, dia não útil, valor zero e arredondamento · 2026-10-18
 
 **Gatilho:** decisões de AMB-014, AMB-019, AMB-020, AMB-022, AMB-023 e AMB-026.
