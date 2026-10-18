@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-003 — Critério de duplicata e identificador repetido · 2026-10-18
+
+**Gatilho:** decisões de AMB-029 e AMB-011.
+
+**O que mudou na spec:** AMB-029: PENDENTE → o identificador não distingue despesas e deve ser único no arquivo; repetido com o mesmo conteúdo, só o primeiro é calculado; com conteúdo diferente, todos são recusados (RN-006 criada). AMB-011: PENDENTE → duplicatas são itens com o mesmo conteúdo, exceto o identificador, com textos comparados sem diferenciar maiúsculas, acentos e espaços (RN-005 criada). Notas de efeito em AMB-012, AMB-013, AMB-018, AMB-021 e AMB-031; formatação da §10 corrigida.
+
+**Por quê:** a saída identifica cada item pelo identificador (RN-003). Com o mesmo conteúdo, os itens são o mesmo lançamento; com conteúdo diferente, não há como saber qual é o correto. Um lançamento repetido reproduz todos os demais dados, e diferenças só de grafia não tornam duas despesas diferentes.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "identificador repetido torna a entrada inválida" (AMB-021) e "identificador diferente prova despesa diferente" (AMB-029), e também os critérios de duplicata que ignoram a descrição, a nota fiscal ou a categoria (AMB-011).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-002 — Teto de hospedagem por diária e formato de entrada fixo · 2026-10-17
 
 **Gatilho:** decisões de AMB-033 e AMB-003.

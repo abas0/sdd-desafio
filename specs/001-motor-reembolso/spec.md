@@ -1,6 +1,6 @@
 # Spec — Motor de Cálculo de Reembolso
 
-**Versão:** 1.0 · **Status:** rascunho · **Última alteração:** 2026-10-17
+**Versão:** 1.0 · **Status:** rascunho · **Última alteração:** 2026-10-18
 
 > **Regra de ouro deste arquivo:** ele descreve o QUÊ e o PORQUÊ. Nenhuma linha
 > aqui pode citar linguagem, biblioteca, classe, função ou estrutura de pasta.
@@ -80,6 +80,29 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 - "Hotel 3 estrelas", R$ 300,00 → nenhum número antes de "diária" ou "noite" → 1 diária, R$ 250,00 reembolsados;
 - "Hotel - 0 diárias", R$ 300,00 → número inválido → 1 diária, R$ 250,00 reembolsados;
 - "Hotel - meia diária", R$ 150,00 → número inválido → 1 diária, R$ 150,00 dentro do teto.
+
+### RN-005 — Itens de mesmo conteúdo
+
+**Regra:** dois itens têm o mesmo conteúdo quando coincidem a data, a categoria, a descrição, o fornecedor, o valor e a indicação de nota fiscal. O identificador não entra na comparação. Os textos (categoria, descrição e fornecedor) são comparados sem diferenciar maiúsculas de minúsculas, letras com e sem acento, nem espaços no início, no fim ou repetidos entre palavras. A comparação de valores com mais de duas casas decimais segue a AMB-014.
+**Origem:** AMB-011, AMB-029.
+**Aceite:**
+- d-006 e d-007 (2026-07-09, alimentação, "Almoco", "Bistro Central", R$ 54,90, com nota) → mesmo conteúdo, apesar dos identificadores diferentes;
+- "Almoço" / "Bistro Central" e "almoco" / "bistro  central" → mesmo conteúdo;
+- d-003 (R$ 100,00) e d-004 (R$ 100,01), mesmo fornecedor e mesma data → conteúdo diferente (valor e descrição);
+- dois itens iguais em tudo, exceto que um tem nota fiscal e o outro não → conteúdo diferente.
+
+### RN-006 — Identificador repetido
+
+**Regra:** o identificador da despesa deve ser único no arquivo. Quando dois ou mais itens têm o mesmo identificador:
+- se todos têm o mesmo conteúdo (RN-005), só o primeiro na ordem do arquivo é calculado; os demais são apresentados como desconsiderados por identificador repetido, com referência ao item calculado;
+- se algum deles tem conteúdo diferente de outro, nenhum desses itens é calculado; todos são apresentados como recusados por identificador repetido com conteúdo diferente.
+
+Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN-001). Os demais itens do arquivo são calculados normalmente. O nome de cada situação na saída é definido na AMB-031.
+**Origem:** AMB-029.
+**Aceite:**
+- dois itens `d-020` com o mesmo conteúdo (alimentação, 2026-07-05, R$ 30,00) → o primeiro é calculado e o segundo é desconsiderado, com referência ao primeiro; o total de alimentação de 2026-07-05 é R$ 30,00;
+- dois itens `d-020`, um de alimentação em 2026-07-05 (R$ 30,00) e outro de transporte urbano em 2026-07-12 (R$ 45,00) → os dois são recusados e não entram nos totais desses dias;
+- três itens `d-020`, dois de alimentação com o mesmo conteúdo (2026-07-05, R$ 30,00) e um de transporte urbano (2026-07-12, R$ 45,00), em qualquer ordem → os três são recusados.
 
 ---
 
@@ -201,11 +224,12 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Ref. levantamento:** A-11
 **Texto original do RH:** "Duplicatas devem ser tratadas."
 **O que não está claro:** quais informações precisam coincidir (data, categoria, fornecedor, valor, descrição, identificador) e se duas despesas idênticas podem ser legítimas.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
-**Depende de:** AMB-029.
-**No exemplo:** d-006 e d-007 (iguais em tudo, exceto o identificador).
+**Decisão:** são duplicatas os itens com o mesmo conteúdo, conforme a RN-005: todos os campos coincidem, exceto o identificador. Os textos são comparados sem diferenciar maiúsculas, acentos e espaços a mais. O que acontece com as duplicatas, inclusive se duas despesas idênticas podem ser legítimas, é decidido na AMB-012.
+**Justificativa:** o identificador não distingue despesas (AMB-029). Um lançamento repetido reproduz todos os demais dados, e diferenças só de grafia não tornam duas despesas diferentes.
+**Regra afetada:** RN-005
+**Depende de:** AMB-029 (decidida); comparação de valores: AMB-014.
+**Afeta:** AMB-012, AMB-018.
+**No exemplo:** d-006 e d-007 (mesmo conteúdo, identificadores diferentes).
 
 ### AMB-012 — O que significa "tratar" duplicatas
 **Ref. levantamento:** A-12
@@ -214,7 +238,8 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
-**Depende de:** AMB-011, AMB-029, AMB-031, AMB-016.
+**Depende de:** AMB-011 e AMB-029 (decididas), AMB-031, AMB-016.
+**Efeito de AMB-011 e AMB-029:** o critério de duplicata é a RN-005. Itens com o mesmo identificador e o mesmo conteúdo já são tratados pela RN-006 (o primeiro é calculado, os demais são desconsiderados); o tratamento de duplicatas com identificadores diferentes deve ser coerente com ela.
 **Fora de escopo relacionado:** fluxo de revisão (§3).
 **No exemplo:** d-006 e d-007.
 
@@ -225,6 +250,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
+**Efeito de AMB-011:** na comparação de duplicatas, categorias são comparadas sem diferenciar maiúsculas, acentos e espaços (RN-005). Se isso também vale para reconhecer a categoria na política, a AMB-013 decide.
 **Fora de escopo relacionado:** lista de categorias no lançamento (§3).
 **No exemplo:** d-005 (coworking); d-014 (ALIMENTACAO).
 
@@ -277,8 +303,9 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
-**Depende de:** AMB-003, AMB-011.
+**Depende de:** AMB-003 e AMB-011 (decididas).
 **Efeito de AMB-002:** se a decisão for "somar", RN-003 passa a valer também para hospedagem.
+**Efeito de AMB-011:** duas hospedagens na mesma data só são duplicatas se tiverem o mesmo conteúdo (RN-005); com valor ou descrição diferentes, a leitura "tratar como duplicata" não se aplica.
 **Efeito de AMB-003:** uma hospedagem de várias diárias cobre várias datas e pode se sobrepor a outra mesmo com datas informadas diferentes.
 **No exemplo:** nenhum (d-010 e d-013 não se sobrepõem).
 
@@ -308,6 +335,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-032.
+**Efeito de AMB-029:** identificador repetido não torna a entrada inválida; é tratado pela RN-006.
 **No exemplo:** nenhum.
 
 ### AMB-022 — Moeda
@@ -381,11 +409,11 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Ref. levantamento:** L-11
 **Texto original do RH:** nenhum.
 **O que não está claro:** se o identificador é gerado por sistema ou digitado pelo colaborador, e se é único. Identificadores diferentes não provam despesas diferentes; identificadores iguais podem indicar duplicata ou entrada inválida.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** identificadores diferentes não provam que as despesas são diferentes; o identificador não entra na comparação de duplicatas (AMB-011). O identificador deve ser único no arquivo. Itens com o mesmo identificador seguem a RN-006: com o mesmo conteúdo, só o primeiro na ordem do arquivo é calculado; com conteúdo diferente, todos são recusados.
+**Justificativa:** a saída identifica cada item pelo identificador (RN-003). Com o mesmo conteúdo, os itens são o mesmo lançamento; com conteúdo diferente, não há como saber qual deles é o correto.
+**Regra afetada:** RN-005, RN-006
 **Afeta:** AMB-011, AMB-012, AMB-021.
-**No exemplo:** d-006 e d-007.
+**No exemplo:** nenhum identificador repetido. d-006 e d-007 têm identificadores diferentes e mesmo conteúdo (AMB-011).
 
 ### AMB-030 — Categoria informada versus descrição
 **Ref. levantamento:** L-12
@@ -406,6 +434,7 @@ Cada regra recebe um ID (`RN-001`, ...). As tasks vão referenciar esses IDs.
 **Regra afetada:** PENDENTE
 **Afeta:** AMB-007, AMB-010, AMB-012, AMB-017.
 **Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
+**Efeito de AMB-029:** a saída precisa de uma situação para o item desconsiderado por identificador repetido e outra para o item recusado por identificador repetido com conteúdo diferente.
 
 ### AMB-032 — Entrada inválida versus item recusado
 **Ref. levantamento:** ponto transversal da revisão
@@ -448,5 +477,6 @@ O sistema está pronto quando:
 ## 10. O que fica em aberto
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
-- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).- Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
+- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
+- Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
 - O valor do limite pode ser ampliado para colaborador em viagem (AMB-008 e AMB-009).
