@@ -24,6 +24,10 @@
 - Não gerencia o fluxo de revisão de despesas duplicadas: prazo, responsável e desfecho da revisão (ver AMB-012).
 - Não gerencia a correção e o reenvio de despesas lançadas com categoria fora da política: quem corrige e em que prazo (ver AMB-017).
 - Não oferece lista de categorias no momento do lançamento da despesa; isso pertence ao sistema que gera a entrada (ver AMB-013).
+- Não trata despesa em moeda estrangeira; todos os valores da entrada são considerados em reais (ver AMB-022).
+- Não aplica teto total de reembolso por período nem por colaborador (ver AMB-023).
+- Não gerencia o fluxo de revisão de despesas em dia não útil: prazo, responsável e desfecho da revisão (ver AMB-019).
+- Não considera feriados estaduais ou municipais (ver AMB-019).
 
 ## 4. Entrada e saída
 
@@ -104,6 +108,32 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 - dois itens `d-020`, um de alimentação em 2026-07-05 (R$ 30,00) e outro de transporte urbano em 2026-07-12 (R$ 45,00) → os dois são recusados e não entram nos totais desses dias;
 - três itens `d-020`, dois de alimentação com o mesmo conteúdo (2026-07-05, R$ 30,00) e um de transporte urbano (2026-07-12, R$ 45,00), em qualquer ordem → os três são recusados.
 
+### RN-007 — Dia não útil
+
+**Regra:** são dias não úteis o sábado, o domingo e os feriados nacionais: 01/01, 21/04, 01/05, 07/09, 12/10, 02/11, 15/11, 20/11 e 25/12, além da Sexta-feira Santa (dois dias antes do Domingo de Páscoa do ano). Feriados estaduais e municipais não são considerados. A despesa com data em dia não útil não é reembolsada: fica com valor reembolsado de R$ 0,00, é apresentada como pendente de revisão por dia não útil e não entra na soma do dia (RN-001). O nome da situação na saída é definido na AMB-031.
+**Origem:** AMB-019.
+**Aceite:**
+- d-012 (2026-07-18, sábado, alimentação, R$ 47,20) → pendente de revisão, R$ 0,00, fora do total de alimentação de 2026-07-18;
+- despesa em 2026-04-03 (Sexta-feira Santa) ou em 2026-04-21 (terça-feira, Tiradentes) → pendente de revisão;
+- despesa em 2026-02-17 (terça-feira de Carnaval) ou em 2026-07-20 (segunda-feira) → dia útil, segue as demais regras.
+
+### RN-008 — Despesa de valor zero
+
+**Regra:** despesa de valor R$ 0,00, já arredondado conforme a RN-009, é recusada por não haver valor a reembolsar. É apresentada na saída com justificativa e não entra na soma do dia (RN-001).
+**Origem:** AMB-020.
+**Aceite:** item de R$ 0,00 → recusado; não altera o total do dia.
+
+### RN-009 — Arredondamento dos valores da entrada
+
+**Regra:** antes de qualquer outra regra, cada valor da entrada é arredondado para duas casas decimais. Se a parte descartada é igual ou maior que 0,005, arredonda-se afastando do zero; se é menor, ela é descartada. Todas as regras seguintes usam o valor arredondado.
+**Origem:** AMB-014.
+**Aceite:**
+- d-011, R$ 33,333 → R$ 33,33;
+- R$ 33,335 → R$ 33,34;
+- −R$ 45,005 → −R$ 45,01;
+- uma única alimentação no dia de R$ 60,004 → R$ 60,00, igual ao limite, reembolso integral (RN-002);
+- R$ 0,004 → R$ 0,00 → valor zero, recusado (RN-008).
+
 ---
 
 ## 6. Ambiguidades identificadas e decisões
@@ -163,6 +193,7 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Decisão:** PENDENTE
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
+**Efeito de AMB-014:** a fronteira é comparada com o valor já arredondado (RN-009).
 **No exemplo:** d-003 (R$ 100,00, sem nota); d-004 (R$ 100,01, sem nota).
 
 ### AMB-006 — Valor sobre o qual se mede o patamar da nota fiscal
@@ -258,9 +289,9 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** A-14
 **Texto original do RH:** nenhum — a política não trata do caso.
 **O que não está claro:** se valores com mais de duas casas são arredondados, truncados ou recusados; com que regra; em que momento (na entrada, por item, no total); e se a comparação com limites e patamares ocorre antes ou depois do arredondamento.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** cada valor da entrada é arredondado para duas casas, com 0,005 arredondado afastando do zero, antes de qualquer outra regra (RN-009).
+**Justificativa:** o reembolso é pago em centavos; arredondar na entrada faz todas as regras trabalharem sobre o valor que de fato pode ser pago.
+**Regra afetada:** RN-009
 **Efeito de AMB-002:** não há sobra de centavos a repartir entre itens.
 **No exemplo:** d-011 (R$ 33,333).
 
@@ -273,6 +304,7 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Regra afetada:** PENDENTE
 **Depende de:** AMB-001 (decidida: soma diária), AMB-032.
 **Efeito de AMB-002:** a leitura "associar a uma despesa original" não se aplica a categorias com limite diário; "abater do total do dia" continua possível.
+**Efeito de AMB-014:** o arredondamento de valores negativos segue a RN-009.
 **No exemplo:** d-009 (−R$ 45,00, transporte urbano, sozinho em 2026-07-11).
 
 ### AMB-016 — Ordem de aplicação das regras
@@ -283,6 +315,7 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Justificativa:** PENDENTE
 **Regra afetada:** PENDENTE
 **Depende de:** todas as demais.
+**Efeito de AMB-014:** o arredondamento é a primeira etapa (RN-009).
 **No exemplo:** d-004; d-006 + d-007; d-008.
 
 ### AMB-017 — Tratamento de item com categoria fora da política
@@ -313,18 +346,18 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** L-01
 **Texto original do RH:** nenhum.
 **O que não está claro:** a política não distingue dia útil de fim de semana ou feriado. Pela letra, não há restrição; falta confirmar se esse silêncio é intencional.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** despesa em dia não útil (sábado, domingo ou feriado nacional, conforme RN-007) não é reembolsada e fica pendente de revisão. O fluxo de revisão e os feriados estaduais e municipais estão fora de escopo (§3).
+**Justificativa:** a política não menciona dia não útil, mas a despesa nesse dia foge do padrão de trabalho e precisa ser confirmada antes do reembolso. A lista de feriados fica na spec porque a entrada não a traz (AMB-033).
+**Regra afetada:** RN-007
 **No exemplo:** d-012 (sábado, "plantao").
 
 ### AMB-020 — Despesa de valor zero
 **Ref. levantamento:** L-02
 **Texto original do RH:** nenhum.
 **O que não está claro:** se uma despesa de R$ 0,00 é válida, recusada ou ignorada.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** despesa de valor R$ 0,00 é recusada, por não haver valor a reembolsar. Aparece na saída com justificativa e não entra na soma do dia.
+**Justificativa:** não há gasto a reembolsar; recusá-la com justificativa mantém o item visível na saída.
+**Regra afetada:** RN-008
 **No exemplo:** nenhum.
 
 ### AMB-021 — Entrada inválida
@@ -342,18 +375,18 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** L-04
 **Texto original do RH:** a política expressa os valores em "R$".
 **O que não está claro:** a entrada não traz moeda; falta confirmar como premissa que todos os valores estão em reais.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** premissa: todos os valores da entrada estão em reais; não há conversão de moeda. Despesa em moeda estrangeira está fora de escopo (§3).
+**Justificativa:** a política expressa os valores em reais e a entrada não informa moeda (AMB-033).
+**Regra afetada:** nenhuma (premissa).
 **No exemplo:** todos.
 
 ### AMB-023 — Teto total no período
 **Ref. levantamento:** L-05
 **Texto original do RH:** nenhum dos nove itens define teto mensal ou por colaborador.
 **O que não está claro:** confirmar como premissa que não há limite global.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** premissa: não há teto total por período nem por colaborador; valem só os limites da política. Teto global está fora de escopo (§3).
+**Justificativa:** nenhum item da política define teto global.
+**Regra afetada:** nenhuma (premissa).
 **No exemplo:** nenhum.
 
 ### AMB-024 — Conteúdo da justificativa
@@ -380,9 +413,9 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Ref. levantamento:** L-08
 **Texto original do RH:** nenhum.
 **O que não está claro:** se colaborador e centro de custo têm algum efeito no cálculo ou só são repassados para a saída.
-**Decisão:** PENDENTE (será resolvida na §4)
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** os dados do colaborador (identificador, nome e centro de custo) não afetam o cálculo e são repetidos na saída sem alteração.
+**Justificativa:** a política não vincula limites ao colaborador nem ao centro de custo; repeti-los na saída identifica de quem é o reembolso.
+**Regra afetada:** §4 (saída).
 **No exemplo:** cabeçalho da entrada.
 
 ### AMB-027 — Totais na saída
@@ -434,6 +467,7 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 **Regra afetada:** PENDENTE
 **Afeta:** AMB-007, AMB-010, AMB-012, AMB-017.
 **Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
+**Efeito de AMB-019:** passa a existir a situação "pendente de revisão por dia não útil", com valor de R$ 0,00 (RN-007).
 **Efeito de AMB-029:** a saída precisa de uma situação para o item desconsiderado por identificador repetido e outra para o item recusado por identificador repetido com conteúdo diferente.
 
 ### AMB-032 — Entrada inválida versus item recusado

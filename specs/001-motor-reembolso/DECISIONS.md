@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-004 — Lote 1: premissas, dia não útil, valor zero e arredondamento · 2026-10-18
+
+**Gatilho:** decisões de AMB-014, AMB-019, AMB-020, AMB-022, AMB-023 e AMB-026.
+
+**O que mudou na spec:** AMB-014: PENDENTE → cada valor da entrada é arredondado para duas casas, com 0,005 afastando do zero, antes de qualquer outra regra (RN-009 criada). AMB-019: PENDENTE → despesa em sábado, domingo ou feriado nacional não é reembolsada e fica pendente de revisão (RN-007 criada). AMB-020: PENDENTE → despesa de R$ 0,00 é recusada (RN-008 criada). AMB-022 e AMB-023: registradas como premissas (valores em reais; sem teto global). AMB-026: dados do colaborador não afetam o cálculo e são repetidos na saída. Quatro itens novos na §3 (moeda estrangeira, teto global, fluxo de revisão de dia não útil, feriados estaduais e municipais). Notas de efeito em AMB-005, AMB-015, AMB-016 e AMB-031.
+
+**Por quê:** AMB-014: o reembolso é pago em centavos; arredondar na entrada faz todas as regras trabalharem sobre o valor que de fato pode ser pago. AMB-019: a despesa em dia não útil foge do padrão de trabalho e precisa ser confirmada antes do reembolso. AMB-020: não há gasto a reembolsar. AMB-022 e AMB-023: a política expressa valores em reais e não define teto global. AMB-026: a política não vincula limites ao colaborador; repeti-lo na saída identifica de quem é o reembolso.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as opções da AMB-014 que arredondam só no total, truncam ou recusam valores com mais de duas casas, e a leitura "dia não útil segue as regras normais" (AMB-019).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-003 — Critério de duplicata e identificador repetido · 2026-10-18
 
 **Gatilho:** decisões de AMB-029 e AMB-011.
