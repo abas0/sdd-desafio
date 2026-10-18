@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-009 — Lote 6: formato da saída e entrada inválida · 2026-10-18
+
+**Gatilho:** decisões das AMB-021, AMB-024, AMB-025, AMB-027, AMB-031 e AMB-032.
+
+**O que mudou na spec:** §4 preenchida: campos da entrada, estrutura da saída, campos de item, situações e motivos, totais diários, resumo e o exemplo completo da saída para `exemplos/despesas-exemplo.json`. RN-018 (entrada inválida) e RN-019 (item com mais de um motivo) criadas. As seis AMBs passam de PENDENTE à decisão; §10 atualizada.
+
+**Por quê:** AMB-021: calcular parte de um arquivo malformado produziria um resultado em que não se pode confiar. AMB-032: separa o erro de quem gerou o arquivo da decisão sobre a despesa. AMB-024: a saída precisa ser entendida sem a spec e conferida pela regra. AMB-025: mostrar todos os motivos evita recusas sucessivas por motivos já conhecidos. AMB-027: o valor de alimentação e transporte só existe no total do dia. AMB-031: distinguir o que não será pago, o que depende de ação fora do sistema e o que é cópia.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "item malformado recusado sozinho" (AMB-032), "saída com campo de erro" (AMB-021), "só o motivo determinante" (AMB-025) e "situação parcial por item" em alimentação e transporte (AMB-031).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-008 — Lote 5: duplicatas, estornos e hospedagens sobrepostas · 2026-10-18
 
 **Gatilho:** decisões das AMB-012, AMB-015 e AMB-018.

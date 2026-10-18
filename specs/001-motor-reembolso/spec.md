@@ -37,15 +37,282 @@
 
 | Campo | Tipo | Significado | Obrigatório |
 |---|---|---|---|
-| | | | |
+| `colaborador.id` | texto | identificador do colaborador | sim |
+| `colaborador.nome` | texto | nome do colaborador | sim |
+| `colaborador.centro_custo` | texto | centro de custo | sim |
+| `periodo.competencia` | texto AAAA-MM | mês de competência | sim |
+| `periodo.inicio` | data AAAA-MM-DD | primeiro dia do período (RN-014) | sim |
+| `periodo.fim` | data AAAA-MM-DD | último dia do período (RN-014) | sim |
+| `despesas` | lista | despesas do período; pode ser vazia | sim |
+| `despesas[].id` | texto não vazio | identificador da despesa, único no arquivo (RN-006) | sim |
+| `despesas[].data` | data AAAA-MM-DD | data da despesa; em hospedagem, data de entrada (RN-013) | sim |
+| `despesas[].categoria` | texto | categoria informada (RN-010) | sim |
+| `despesas[].descricao` | texto não vazio | descrição livre (RN-004, RN-011, RN-013) | sim |
+| `despesas[].fornecedor` | texto não vazio | fornecedor | sim |
+| `despesas[].valor` | número | valor em reais; negativo é estorno (RN-016) | sim |
+| `despesas[].tem_nota_fiscal` | verdadeiro ou falso | se há nota fiscal (RN-012) | sim |
 
-**Saída:** definida por mim. Estrutura e significado de cada campo:
+Entrada que não atende a esta tabela é inválida (RN-018). Campos a mais são ignorados.
+
+**Saída:** um JSON com cinco partes:
 
 | Campo | Tipo | Significado |
 |---|---|---|
-| | | |
+| `colaborador` | objeto | copiado da entrada, sem alteração (AMB-026) |
+| `periodo` | objeto | copiado da entrada, sem alteração |
+| `itens` | lista | um registro por despesa da entrada, na mesma ordem |
+| `totais_diarios` | lista | um registro por dia e categoria de alimentação ou transporte urbano com pelo menos um item na soma (RN-003), em ordem de data e categoria |
+| `resumo` | objeto | totais do período |
 
-<Cole um exemplo de saída para uma entrada pequena. Vale mais que três parágrafos.>
+Campos de cada item:
+
+| Campo | Tipo | Significado |
+|---|---|---|
+| `id`, `data`, `descricao`, `fornecedor`, `tem_nota_fiscal` | como na entrada | copiados da entrada |
+| `categoria_informada` | texto | categoria como veio na entrada |
+| `categoria` | texto ou nulo | categoria reconhecida (RN-010): `alimentacao`, `transporte_urbano` ou `hospedagem`; nulo se fora da política |
+| `valor_informado` | número | valor como veio na entrada |
+| `valor_considerado` | número | valor arredondado (RN-009) |
+| `situacao` | texto | ver tabela de situações |
+| `motivo` | texto ou nulo | ver tabela de situações |
+| `outros_motivos` | lista | motivos de outras regras que também se aplicariam, na ordem da §8 (RN-019); vazia se não houver |
+| `referencia` | texto ou nulo | `id` do item relacionado: item calculado (duplicata ou identificador repetido) ou hospedagem vinculada (estorno) |
+| `total_do_dia` | objeto ou nulo | `{ "data", "categoria" }` do total a que o item pertence; só para alimentação e transporte urbano na soma do dia |
+| `diarias`, `teto` | número | só para hospedagem calculada (RN-004) |
+| `valor_liquido` | número | só para hospedagem com estorno abatido (RN-016): valor depois do abatimento, comparado com o teto |
+| `valor_reembolsado` | número ou nulo | hospedagem calculada: valor pago; item não reembolsado: 0.00; item na soma do dia ou estorno abatido: nulo, pois o valor está no total do dia ou na hospedagem (RN-003) |
+| `regras` | lista | RNs aplicadas |
+| `justificativa` | texto | motivo, valores comparados e limite ou teto (AMB-024) |
+
+Situações e motivos (AMB-031):
+
+| `situacao` | Quando | `motivo` |
+|---|---|---|
+| `compoe_total_do_dia` | alimentação ou transporte urbano na soma do dia | nulo |
+| `abatido` | estorno de hospedagem abatido de uma hospedagem calculada (RN-016) | nulo |
+| `reembolsado` | hospedagem dentro do teto | nulo |
+| `reembolsado_parcialmente` | hospedagem acima do teto | nulo |
+| `recusado` | não será pago | `categoria_fora_da_politica`, `descricao_incompativel`, `fora_do_periodo`, `valor_zero`, `identificador_repetido_conteudo_diferente` |
+| `pendente` | pode ser pago após uma ação fora do sistema | `nota_fiscal_ausente`, `dia_nao_util`, `sobreposicao_hospedagem`, `estorno_sem_hospedagem` |
+| `desconsiderado` | cópia de outro item | `duplicata`, `identificador_repetido` |
+
+Estorno vinculado a hospedagem não reembolsada recebe a mesma situação e o mesmo motivo dela, com `referencia` para ela (RN-016).
+
+Campos de cada total diário: `data`, `categoria`, `itens` (ids na soma), `valor_total` (pode ser negativo), `em_viagem` (RN-013), `limite`, `valor_reembolsado`, `situacao` (`integral` se o total é menor ou igual ao limite e maior que zero; `parcial` se é maior que o limite; `sem_valor` se é menor ou igual a zero), `regras` e `justificativa`.
+
+Campos do resumo: `total_reembolsado` (soma dos `valor_reembolsado` dos totais diários e das hospedagens calculadas) e `quantidade_por_situacao` (as sete situações, inclusive as com zero).
+
+Valores monetários são escritos com exatamente duas casas decimais, em reais; `valor_informado` repete a entrada. O texto das justificativas abaixo é ilustrativo: o que se exige é o conteúdo (motivo, valores comparados, limite ou teto).
+
+**Exemplo:** saída para `exemplos/despesas-exemplo.json`.
+
+```json
+{
+  "colaborador": { "id": "c-0417", "nome": "Marina Volpi", "centro_custo": "CC-ENG-PLATAFORMA" },
+  "periodo": { "competencia": "2026-07", "inicio": "2026-07-01", "fim": "2026-07-31" },
+  "itens": [
+    {
+      "id": "d-001", "data": "2026-07-03",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Almoco com cliente", "fornecedor": "Restaurante Tavola",
+      "valor_informado": 72.50, "valor_considerado": 72.50, "tem_nota_fiscal": true,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-03", "categoria": "alimentacao" },
+      "valor_reembolsado": null,
+      "regras": ["RN-001", "RN-003"],
+      "justificativa": "Compõe o total de alimentação de 2026-07-03; o valor reembolsado é apurado no total do dia."
+    },
+    {
+      "id": "d-002", "data": "2026-07-03",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Jantar apos reuniao", "fornecedor": "Cantina do Porto",
+      "valor_informado": 38.00, "valor_considerado": 38.00, "tem_nota_fiscal": true,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-03", "categoria": "alimentacao" },
+      "valor_reembolsado": null,
+      "regras": ["RN-001", "RN-003"],
+      "justificativa": "Compõe o total de alimentação de 2026-07-03; o valor reembolsado é apurado no total do dia."
+    },
+    {
+      "id": "d-003", "data": "2026-07-06",
+      "categoria_informada": "transporte_urbano", "categoria": "transporte_urbano",
+      "descricao": "Corrida aeroporto", "fornecedor": "TaxiApp",
+      "valor_informado": 100.00, "valor_considerado": 100.00, "tem_nota_fiscal": false,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-06", "categoria": "transporte_urbano" },
+      "valor_reembolsado": null,
+      "regras": ["RN-012", "RN-001", "RN-003"],
+      "justificativa": "Valor de R$ 100,00 não exige nota fiscal; compõe o total de transporte urbano de 2026-07-06."
+    },
+    {
+      "id": "d-004", "data": "2026-07-06",
+      "categoria_informada": "transporte_urbano", "categoria": "transporte_urbano",
+      "descricao": "Corrida hotel", "fornecedor": "TaxiApp",
+      "valor_informado": 100.01, "valor_considerado": 100.01, "tem_nota_fiscal": false,
+      "situacao": "pendente", "motivo": "nota_fiscal_ausente", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-012"],
+      "justificativa": "Valor de R$ 100,01 acima de R$ 100,00 sem nota fiscal; pendente até o envio da nota."
+    },
+    {
+      "id": "d-005", "data": "2026-07-07",
+      "categoria_informada": "coworking", "categoria": null,
+      "descricao": "Diaria em espaco compartilhado", "fornecedor": "HubOffice",
+      "valor_informado": 89.00, "valor_considerado": 89.00, "tem_nota_fiscal": true,
+      "situacao": "recusado", "motivo": "categoria_fora_da_politica", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-010"],
+      "justificativa": "Categoria \"coworking\" fora da política (alimentação, transporte urbano, hospedagem)."
+    },
+    {
+      "id": "d-006", "data": "2026-07-09",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Almoco", "fornecedor": "Bistro Central",
+      "valor_informado": 54.90, "valor_considerado": 54.90, "tem_nota_fiscal": true,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-09", "categoria": "alimentacao" },
+      "valor_reembolsado": null,
+      "regras": ["RN-001", "RN-003"],
+      "justificativa": "Compõe o total de alimentação de 2026-07-09; o valor reembolsado é apurado no total do dia."
+    },
+    {
+      "id": "d-007", "data": "2026-07-09",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Almoco", "fornecedor": "Bistro Central",
+      "valor_informado": 54.90, "valor_considerado": 54.90, "tem_nota_fiscal": true,
+      "situacao": "desconsiderado", "motivo": "duplicata", "outros_motivos": [], "referencia": "d-006",
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-005", "RN-015"],
+      "justificativa": "Mesmo conteúdo de d-006; desconsiderado por duplicata."
+    },
+    {
+      "id": "d-008", "data": "2026-04-15",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Almoco de abril lancado com atraso", "fornecedor": "Restaurante Tavola",
+      "valor_informado": 41.00, "valor_considerado": 41.00, "tem_nota_fiscal": true,
+      "situacao": "recusado", "motivo": "fora_do_periodo", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-014"],
+      "justificativa": "Data 2026-04-15 fora do período de 2026-07-01 a 2026-07-31."
+    },
+    {
+      "id": "d-009", "data": "2026-07-11",
+      "categoria_informada": "transporte_urbano", "categoria": "transporte_urbano",
+      "descricao": "Estorno de corrida cancelada", "fornecedor": "TaxiApp",
+      "valor_informado": -45.00, "valor_considerado": -45.00, "tem_nota_fiscal": false,
+      "situacao": "pendente", "motivo": "dia_nao_util", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-007"],
+      "justificativa": "2026-07-11 é sábado; transporte urbano em dia não útil fica pendente de revisão."
+    },
+    {
+      "id": "d-010", "data": "2026-07-14",
+      "categoria_informada": "hospedagem", "categoria": "hospedagem",
+      "descricao": "Hotel Rio - 2 diarias", "fornecedor": "Hotel Copa Sul",
+      "valor_informado": 480.00, "valor_considerado": 480.00, "tem_nota_fiscal": true,
+      "situacao": "reembolsado", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "diarias": 2, "teto": 500.00,
+      "valor_reembolsado": 480.00,
+      "regras": ["RN-004", "RN-002"],
+      "justificativa": "2 diárias, teto de R$ 500,00; valor de R$ 480,00 dentro do teto."
+    },
+    {
+      "id": "d-011", "data": "2026-07-15",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Cafe da manha hotel", "fornecedor": "Hotel Copa Sul",
+      "valor_informado": 33.333, "valor_considerado": 33.33, "tem_nota_fiscal": true,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-15", "categoria": "alimentacao" },
+      "valor_reembolsado": null,
+      "regras": ["RN-009", "RN-001", "RN-003"],
+      "justificativa": "Valor de R$ 33,333 arredondado para R$ 33,33; compõe o total de alimentação de 2026-07-15."
+    },
+    {
+      "id": "d-012", "data": "2026-07-18",
+      "categoria_informada": "alimentacao", "categoria": "alimentacao",
+      "descricao": "Almoco de sabado - plantao", "fornecedor": "Padaria Uniao",
+      "valor_informado": 47.20, "valor_considerado": 47.20, "tem_nota_fiscal": true,
+      "situacao": "pendente", "motivo": "dia_nao_util", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-007"],
+      "justificativa": "2026-07-18 é sábado; alimentação em dia não útil fica pendente de revisão."
+    },
+    {
+      "id": "d-013", "data": "2026-07-22",
+      "categoria_informada": "hospedagem", "categoria": "hospedagem",
+      "descricao": "Airbnb 3 noites", "fornecedor": "Airbnb",
+      "valor_informado": 690.00, "valor_considerado": 690.00, "tem_nota_fiscal": false,
+      "situacao": "pendente", "motivo": "nota_fiscal_ausente", "outros_motivos": [], "referencia": null,
+      "total_do_dia": null,
+      "valor_reembolsado": 0.00,
+      "regras": ["RN-012"],
+      "justificativa": "Valor de R$ 690,00 acima de R$ 100,00 sem nota fiscal; pendente até o envio da nota."
+    },
+    {
+      "id": "d-014", "data": "2026-07-31",
+      "categoria_informada": "ALIMENTACAO", "categoria": "alimentacao",
+      "descricao": "Jantar de encerramento", "fornecedor": "Restaurante Tavola",
+      "valor_informado": 61.00, "valor_considerado": 61.00, "tem_nota_fiscal": true,
+      "situacao": "compoe_total_do_dia", "motivo": null, "outros_motivos": [], "referencia": null,
+      "total_do_dia": { "data": "2026-07-31", "categoria": "alimentacao" },
+      "valor_reembolsado": null,
+      "regras": ["RN-010", "RN-001", "RN-003"],
+      "justificativa": "Categoria \"ALIMENTACAO\" reconhecida como alimentação; compõe o total de alimentação de 2026-07-31."
+    }
+  ],
+  "totais_diarios": [
+    {
+      "data": "2026-07-03", "categoria": "alimentacao", "itens": ["d-001", "d-002"],
+      "valor_total": 110.50, "em_viagem": false, "limite": 60.00,
+      "valor_reembolsado": 60.00, "situacao": "parcial",
+      "regras": ["RN-001", "RN-002", "RN-003"],
+      "justificativa": "Total de R$ 110,50 acima do limite diário de R$ 60,00; reembolsados R$ 60,00."
+    },
+    {
+      "data": "2026-07-06", "categoria": "transporte_urbano", "itens": ["d-003"],
+      "valor_total": 100.00, "em_viagem": true, "limite": 120.00,
+      "valor_reembolsado": 100.00, "situacao": "integral",
+      "regras": ["RN-013", "RN-001", "RN-002", "RN-003"],
+      "justificativa": "Dia de viagem (\"aeroporto\" em d-003): limite ampliado para R$ 120,00. Total de R$ 100,00 dentro do limite; reembolsados R$ 100,00."
+    },
+    {
+      "data": "2026-07-09", "categoria": "alimentacao", "itens": ["d-006"],
+      "valor_total": 54.90, "em_viagem": false, "limite": 60.00,
+      "valor_reembolsado": 54.90, "situacao": "integral",
+      "regras": ["RN-001", "RN-002", "RN-003"],
+      "justificativa": "Total de R$ 54,90 dentro do limite diário de R$ 60,00; reembolsados R$ 54,90."
+    },
+    {
+      "data": "2026-07-15", "categoria": "alimentacao", "itens": ["d-011"],
+      "valor_total": 33.33, "em_viagem": true, "limite": 90.00,
+      "valor_reembolsado": 33.33, "situacao": "integral",
+      "regras": ["RN-013", "RN-001", "RN-002", "RN-003"],
+      "justificativa": "Dia de viagem (estadia de d-010): limite ampliado para R$ 90,00. Total de R$ 33,33 dentro do limite; reembolsados R$ 33,33."
+    },
+    {
+      "data": "2026-07-31", "categoria": "alimentacao", "itens": ["d-014"],
+      "valor_total": 61.00, "em_viagem": false, "limite": 60.00,
+      "valor_reembolsado": 60.00, "situacao": "parcial",
+      "regras": ["RN-001", "RN-002", "RN-003"],
+      "justificativa": "Total de R$ 61,00 acima do limite diário de R$ 60,00; reembolsados R$ 60,00."
+    }
+  ],
+  "resumo": {
+    "total_reembolsado": 788.23,
+    "quantidade_por_situacao": {
+      "compoe_total_do_dia": 6, "abatido": 0, "reembolsado": 1, "reembolsado_parcialmente": 0,
+      "recusado": 2, "pendente": 4, "desconsiderado": 1
+    }
+  }
+}
+```
 
 ## 5. Regras de negócio
 
@@ -244,6 +511,23 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 - A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-21, 1 diária) → a noite de 21/07 é comum → os dois ficam pendentes;
 - A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-22, 1 diária) → não há noite em comum → seguem as demais regras;
 - d-010 (noites de 14 e 15/07) e d-013 (noites de 22 a 24/07) → não há sobreposição.
+
+### RN-018 — Entrada inválida
+
+**Regra:** a entrada é inválida quando: não é um JSON válido; falta `colaborador`, `periodo` ou `despesas`; o período não corresponde ao mês da competência (RN-014); ou algum item não tem todos os campos da §4, ou tem um campo com tipo ou formato errado (`id`, descrição ou fornecedor vazios ou que não são texto, data fora do formato AAAA-MM-DD ou que não existe, valor que não é número, nota que não é verdadeiro ou falso). Campos a mais são ignorados. Com entrada inválida, nenhuma saída é gravada; o sistema informa qual é o problema e termina indicando erro. Uma lista de despesas vazia é válida: a saída não tem itens e o total é R$ 0,00.
+**Origem:** AMB-021, AMB-032.
+**Aceite:**
+- item com `"valor": "abc"` → entrada inválida, sem saída;
+- item com `"data": "2026-02-30"` → entrada inválida;
+- item sem `fornecedor` → entrada inválida;
+- item com um campo a mais (`"moeda": "BRL"`) → campo ignorado, cálculo normal;
+- `"despesas": []` → saída sem itens, `total_reembolsado` de 0.00.
+
+### RN-019 — Item com mais de um motivo
+
+**Regra:** a situação e o motivo de um item são os da primeira regra que se aplica a ele, na ordem da §8. Os motivos das demais regras que também se aplicariam aparecem em `outros_motivos`, na mesma ordem.
+**Origem:** AMB-025.
+**Aceite:** alimentação em 2026-04-18 (sábado, fora do período) → situação e motivo pela primeira regra na ordem da §8; o outro motivo aparece em `outros_motivos`.
 
 ---
 
@@ -480,9 +764,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** L-03
 **Texto original do RH:** nenhum.
 **O que não está claro:** o comportamento com informação ausente, data inválida, valor não numérico, identificador repetido ou lista vazia; e se a recusa é do arquivo inteiro ou só do item.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** as condições da RN-018. Com entrada inválida, não há saída; o sistema informa o problema e indica erro. Uma lista vazia é válida.
+**Justificativa:** calcular parte de um arquivo malformado produziria um resultado em que não se pode confiar.
+**Regra afetada:** RN-018
 **Depende de:** AMB-032.
 **Efeito de AMB-029:** identificador repetido não torna a entrada inválida; é tratado pela RN-006.
 **No exemplo:** nenhum.
@@ -509,9 +793,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** L-06
 **Texto original do RH:** nenhum; o enunciado exige justificativa por item.
 **O que não está claro:** o que a justificativa precisa conter (regra aplicada, valores, mais de um motivo).
-**Decisão:** PENDENTE (será resolvida na §4)
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a justificativa é um texto com o motivo, os valores comparados e o limite ou teto. O campo `regras` lista as RNs aplicadas (§4).
+**Justificativa:** quem lê a saída precisa entender a decisão sem consultar a spec, e quem confere precisa da regra.
+**Regra afetada:** §4 (saída)
 **Efeito de AMB-002:** a justificativa do item cita o total do dia de que faz parte; o total do dia precisa de justificativa própria.
 **No exemplo:** todos.
 
@@ -519,9 +803,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** L-07
 **Texto original do RH:** nenhum.
 **O que não está claro:** quando um item incide em mais de uma regra (por exemplo, fora do período e duplicado), se a saída mostra só um motivo ou todos.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a situação e o motivo são os da primeira regra que se aplica, na ordem da §8; os demais motivos aparecem em `outros_motivos` (RN-019).
+**Justificativa:** mostrar todos os motivos evita que um item corrigido num ponto seja recusado de novo por outro já conhecido.
+**Regra afetada:** RN-019
 **Depende de:** AMB-016, AMB-024.
 **No exemplo:** d-008, conforme as demais decisões.
 
@@ -538,9 +822,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** L-09
 **Texto original do RH:** nenhum; o formato da saída é definido nesta spec.
 **O que não está claro:** se a saída traz só valores por item ou também totais por dia, por categoria e do período.
-**Decisão:** PENDENTE (será resolvida na §4)
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** totais por dia e categoria para alimentação e transporte urbano, e um resumo com o total reembolsado e a quantidade de itens por situação (§4).
+**Justificativa:** o valor de alimentação e transporte só existe no total do dia (RN-003); o resumo dá o valor a pagar.
+**Regra afetada:** §4 (saída)
 **Efeito de AMB-002:** parcialmente decidida — a saída precisa ter o total por categoria e dia para alimentação e transporte urbano; os demais totais seguem pendentes.
 **No exemplo:** todos.
 
@@ -583,9 +867,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** ponto transversal da revisão
 **Texto original do RH:** nenhum.
 **O que não está claro:** se a saída admite uma situação de "pendente" (usada como opção em AMB-007, AMB-010, AMB-012 e AMB-017) além de reembolsado integral, parcial e recusado.
-**Decisão:** PENDENTE (será resolvida na §4)
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** as situações são `compoe_total_do_dia`, `abatido`, `reembolsado`, `reembolsado_parcialmente`, `recusado`, `pendente` e `desconsiderado`, com os motivos da §4.
+**Justificativa:** distinguir o que não será pago (recusado), o que depende de uma ação fora do sistema (pendente) e o que é cópia de outro item (desconsiderado).
+**Regra afetada:** §4 (saída)
 **Afeta:** AMB-007, AMB-010, AMB-012, AMB-017.
 **Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
 **Efeito de AMB-019:** passa a existir a situação "pendente de revisão por dia não útil", com valor de R$ 0,00 (RN-007).
@@ -597,9 +881,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** ponto transversal da revisão
 **Texto original do RH:** nenhum.
 **O que não está claro:** a diferença entre dado malformado e item válido que não é reembolsado, usada em AMB-015, AMB-017 e AMB-021.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** um dado malformado torna a entrada inteira inválida (RN-018). Um item bem formado que não é pago fica recusado, pendente ou desconsiderado, sempre com motivo (§4).
+**Justificativa:** separa o erro de quem gerou o arquivo da decisão sobre a despesa.
+**Regra afetada:** RN-018
 **Afeta:** AMB-015, AMB-017, AMB-021.
 
 ### AMB-033 — Informação que a entrada não traz
@@ -634,4 +918,3 @@ O sistema está pronto quando:
 ## 10. O que fica em aberto
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
-- Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
