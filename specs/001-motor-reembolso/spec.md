@@ -527,7 +527,10 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 
 **Regra:** a situação e o motivo de um item são os da primeira regra que se aplica a ele, na ordem da §8. Os motivos das demais regras que também se aplicariam aparecem em `outros_motivos`, na mesma ordem.
 **Origem:** AMB-025.
-**Aceite:** alimentação em 2026-04-18 (sábado, fora do período) → situação e motivo pela primeira regra na ordem da §8; o outro motivo aparece em `outros_motivos`.
+**Aceite:**
+- alimentação em 2026-04-18 (sábado, fora do período) → recusado, motivo `fora_do_periodo`, `outros_motivos`: [`dia_nao_util`];
+- duas despesas iguais fora do período → a primeira é recusada (`fora_do_periodo`); a segunda é desconsiderada (`duplicata`), com `outros_motivos`: [`fora_do_periodo`];
+- duas hospedagens idênticas → a segunda é desconsiderada (`duplicata`); a primeira é calculada normalmente, sem sobreposição.
 
 ---
 
@@ -707,9 +710,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** A-16
 **Texto original do RH:** nenhum — a política não define ordem.
 **O que não está claro:** quando várias regras incidem sobre o mesmo item (competência, categoria, duplicata, nota fiscal, ampliação por viagem, limite), qual é verificada primeiro. A ordem muda o resultado: d-004 pode terminar com R$ 0,00 ou R$ 80,00 conforme a nota seja verificada antes ou depois do limite; d-006 + d-007 mudam conforme a duplicata seja desconsiderada antes ou depois da soma diária.
-**Decisão:** PENDENTE (será registrada na §8)
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a ordem da §8.
+**Justificativa:** as cópias são retiradas primeiro, para que o original seja avaliado sozinho e duas hospedagens idênticas não se sobreponham. As recusas vêm antes das pendências: o que nunca será pago aparece como recusado, e ninguém revisa um item que não poderia ser pago de qualquer forma. Arredondamento, dias de viagem e limites seguem a dependência entre as regras.
+**Regra afetada:** §8, RN-019
 **Depende de:** todas as demais.
 **Efeito de AMB-014:** o arredondamento é a primeira etapa (RN-009).
 **Efeito de AMB-007:** a nota é verificada no item, antes da soma do dia (RN-012).
@@ -905,8 +908,16 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 
 ## 8. Ordem de aplicação das regras
 
-<Quando duas regras incidem sobre a mesma despesa, qual vale primeiro? A ordem
-muda o resultado. Declarar isso separa spec boa de spec média.>
+1. **Validação da entrada** (RN-018). Se a entrada for inválida, nada é calculado.
+2. **Arredondamento** dos valores (RN-009).
+3. **Cópias:** identificador repetido (RN-006) e duplicata (RN-015), com os valores já arredondados.
+4. **Recusas**, nesta ordem: categoria (RN-010), descrição (RN-011), período (RN-014) e valor zero (RN-008).
+5. **Pendências**, nesta ordem: dia não útil (RN-007), nota fiscal (RN-012) e sobreposição de hospedagens (RN-017).
+6. **Estornos de hospedagem** (RN-016), conforme a situação da hospedagem correspondente.
+7. **Dias de viagem** (RN-013), com todos os itens da entrada.
+8. **Somas do dia, estornos e limites** (RN-001 a RN-004, RN-016).
+
+A situação e o motivo de cada item vêm da primeira regra das etapas 3 a 5 que se aplica a ele. As demais regras dessas etapas que também se aplicariam vão para `outros_motivos`, na mesma ordem (RN-019). Itens desconsiderados ou recusados nas etapas 3 e 4 não entram na verificação de sobreposição nem nas somas.
 
 ## 9. Critérios de aceite
 
@@ -917,4 +928,4 @@ O sistema está pronto quando:
 
 ## 10. O que fica em aberto
 
-- As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
+- Nenhuma ambiguidade da §6 está pendente.

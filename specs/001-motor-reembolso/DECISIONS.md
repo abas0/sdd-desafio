@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-010 — Lote 7: ordem de aplicação das regras · 2026-10-18
+
+**Gatilho:** decisão da AMB-016.
+
+**O que mudou na spec:** §8 preenchida com a ordem de aplicação das regras: validação, arredondamento, cópias, recusas, pendências, estornos de hospedagem, dias de viagem e somas com limites. AMB-016: PENDENTE → a ordem da §8. Aceites da RN-019 tornados concretos. §10 atualizada: nenhuma ambiguidade pendente.
+
+**Por quê:** as cópias são retiradas primeiro, para que o original seja avaliado sozinho; as recusas vêm antes das pendências, para que ninguém revise um item que não poderia ser pago; as demais posições seguem a dependência entre as regras.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "pendências antes de recusas" e "cópias avaliadas como itens independentes" (AMB-016).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-009 — Lote 6: formato da saída e entrada inválida · 2026-10-18
 
 **Gatilho:** decisões das AMB-021, AMB-024, AMB-025, AMB-027, AMB-031 e AMB-032.
