@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-008 — Lote 5: duplicatas, estornos e hospedagens sobrepostas · 2026-10-18
+
+**Gatilho:** decisões das AMB-012, AMB-015 e AMB-018.
+
+**O que mudou na spec:** AMB-012: PENDENTE → só o primeiro item é calculado e as duplicatas são desconsideradas (RN-015 criada). AMB-015: PENDENTE → estorno abatido antes do limite, na soma do dia (alimentação e transporte) ou na hospedagem com a mesma data de entrada; total negativo vira R$ 0,00 (RN-016 criada). AMB-018: PENDENTE → hospedagens com noite em comum ficam pendentes de revisão (RN-017 criada). §3: sai a revisão de duplicatas; entram a revisão de hospedagens sobrepostas e a de estornos de hospedagem. Notas de efeito nas AMB-016 e AMB-031; §10 atualizada.
+
+**Por quê:** AMB-012: um lançamento repetido não é uma nova despesa. AMB-015: o estorno reduz o gasto líquido e um total negativo não gera cobrança. AMB-018: duas hospedagens na mesma noite indicam erro ou gasto em dobro, e não há valor por noite.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "revisar duplicatas" e "recusar todas" (AMB-012); "recusar", "desconsiderar", "abater depois do limite" e "abater do total do período" (AMB-015); "cada hospedagem com o seu teto", "pagar só a de maior valor" e "deixar pendente só a noite sobreposta" (AMB-018).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-007 — Lote 4: viagem e competência · 2026-10-18
 
 **Gatilho:** decisões das AMB-008, AMB-009, AMB-010 e AMB-028, e a exceção para hospedagem na AMB-019.

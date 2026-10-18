@@ -21,7 +21,8 @@
 
 ## 3. Fora de escopo
 
-- Não gerencia o fluxo de revisão de despesas duplicadas: prazo, responsável e desfecho da revisão (ver AMB-012).
+- Não gerencia o fluxo de revisão de hospedagens sobrepostas: prazo, responsável e desfecho (ver AMB-018).
+- Não gerencia o fluxo de revisão de estornos de hospedagem sem estadia correspondente nem a reavaliação de itens pendentes com estornos vinculados (ver AMB-015).
 - Não gerencia o envio posterior da nota fiscal: prazo e reavaliação do item pendente (ver AMB-007).
 - Não gerencia a correção e o reenvio de despesas recusadas por categoria fora da política ou por descrição incompatível com a categoria: quem corrige e em que prazo (ver AMB-017, AMB-030).
 - Não oferece lista de categorias no momento do lançamento da despesa; isso pertence ao sistema que gera a entrada (ver AMB-013).
@@ -211,6 +212,39 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 - hospedagem com entrada em 2026-07-30, "3 diárias", R$ 600,00 → dentro do período, teto de R$ 750,00, R$ 600,00 reembolsados;
 - hospedagem com entrada em 2026-08-10 no arquivo de julho → recusada, fora do período.
 
+### RN-015 — Duplicatas
+
+**Regra:** quando dois ou mais itens com identificadores diferentes têm o mesmo conteúdo (RN-005), só o primeiro na ordem do arquivo é calculado. Os demais são apresentados como desconsiderados por duplicata, com referência ao item calculado, e não entram na soma do dia.
+**Origem:** política do RH, item 8; AMB-012.
+**Aceite:**
+- d-006 → calculado; d-007 → desconsiderado por duplicata, com referência a d-006; o total de alimentação de 2026-07-09 é R$ 54,90 → R$ 54,90 reembolsados;
+- três itens com o mesmo conteúdo → o primeiro é calculado e os outros dois são desconsiderados.
+
+### RN-016 — Estornos
+
+**Regra:** item de valor negativo é um estorno.
+- **Alimentação e transporte urbano:** o estorno entra na soma do dia da sua categoria (RN-001) e a reduz antes da comparação com o limite (RN-002). Se o total do dia ficar negativo, o valor reembolsado do dia é R$ 0,00, e o saldo negativo não é descontado de outros dias.
+- **Hospedagem:** o estorno é abatido do item de hospedagem com a mesma data de entrada, antes da comparação com o teto (RN-004). Sem hospedagem com essa data de entrada, o estorno fica pendente de revisão, com R$ 0,00. Se a hospedagem correspondente não for reembolsada (pendente, recusada ou desconsiderada), o estorno fica na mesma situação, com referência a ela, e R$ 0,00.
+
+**Origem:** AMB-015.
+**Aceite:**
+- corrida de R$ 100,00 e estorno de −R$ 45,00 no mesmo dia útil, sem viagem → total de R$ 55,00 → R$ 55,00 reembolsados;
+- corridas de R$ 150,00 e estorno de −R$ 45,00 → total de R$ 105,00 → R$ 80,00 reembolsados;
+- estorno de −R$ 45,00 sozinho em dia útil → total de −R$ 45,00 → R$ 0,00;
+- d-009 (−R$ 45,00, 2026-07-11, sábado) → pendente de revisão por dia não útil (RN-007);
+- hospedagem com entrada em 2026-07-14, 2 diárias, R$ 480,00, e estorno de hospedagem em 2026-07-14 de −R$ 80,00 → R$ 400,00 líquidos, abaixo do teto de R$ 500,00 → R$ 400,00 reembolsados;
+- estorno de hospedagem em 2026-07-16, sem hospedagem com essa data de entrada → pendente de revisão, R$ 0,00;
+- hospedagem com entrada em 2026-07-22, sem nota, R$ 690,00 (pendente de nota fiscal), e estorno de hospedagem em 2026-07-22 de −R$ 50,00 → o estorno fica pendente de nota fiscal, com referência à hospedagem, R$ 0,00.
+
+### RN-017 — Hospedagens sobrepostas
+
+**Regra:** as noites de uma estadia são a data de entrada e os dias seguintes, uma noite por diária (RN-004); o dia de saída não é noite. Itens de hospedagem que têm pelo menos uma noite em comum ficam todos pendentes de revisão por sobreposição de hospedagem, com R$ 0,00.
+**Origem:** AMB-018.
+**Aceite:**
+- A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-21, 1 diária) → a noite de 21/07 é comum → os dois ficam pendentes;
+- A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-22, 1 diária) → não há noite em comum → seguem as demais regras;
+- d-010 (noites de 14 e 15/07) e d-013 (noites de 22 a 24/07) → não há sobreposição.
+
 ---
 
 ## 6. Ambiguidades identificadas e decisões
@@ -344,9 +378,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** A-12
 **Texto original do RH:** "Duplicatas devem ser tratadas."
 **O que não está claro:** leituras: manter uma e recusar as demais; recusar todas; marcar para revisão. Se uma for mantida, qual. Se a duplicata é desconsiderada antes ou depois da soma diária. Se marcada para revisão, qual valor reembolsável aparece na saída.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** só o primeiro item na ordem do arquivo é calculado; os demais são desconsiderados por duplicata, com referência a ele, e não entram na soma do dia (RN-015).
+**Justificativa:** um lançamento repetido não é uma nova despesa. Tratá-lo como o identificador repetido (RN-006) mantém uma única regra para o mesmo caso.
+**Regra afetada:** RN-015
 **Depende de:** AMB-011 e AMB-029 (decididas), AMB-031, AMB-016.
 **Efeito de AMB-011 e AMB-029:** o critério de duplicata é a RN-005. Itens com o mesmo identificador e o mesmo conteúdo já são tratados pela RN-006 (o primeiro é calculado, os demais são desconsiderados); o tratamento de duplicatas com identificadores diferentes deve ser coerente com ela.
 **Fora de escopo relacionado:** fluxo de revisão (§3).
@@ -377,9 +411,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** A-15
 **Texto original do RH:** nenhum — a política não trata do caso.
 **O que não está claro:** leituras: ignorar; recusar como dado inválido; abater do total do dia ou do período; associar a uma despesa original. Se o estorno reduz a soma diária. O que acontece quando só há estorno no dia, na categoria ou na entrada.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o estorno é abatido antes do limite: em alimentação e transporte, da soma do dia da categoria, e total negativo vira R$ 0,00; em hospedagem, do item com a mesma data de entrada. Sem esse item, o estorno fica pendente de revisão; se o item não for reembolsado, o estorno acompanha a situação dele (RN-016).
+**Justificativa:** o estorno devolve ao colaborador parte do que ele gastou, então abatê-lo antes do limite calcula o reembolso sobre o gasto líquido. Um total negativo não gera cobrança: a empresa apenas não paga. Um estorno vinculado a uma hospedagem segue o destino dela, para ser descontado quando ela for reavaliada.
+**Regra afetada:** RN-016
 **Depende de:** AMB-001 (decidida: soma diária), AMB-032.
 **Efeito de AMB-002:** a leitura "associar a uma despesa original" não se aplica a categorias com limite diário; "abater do total do dia" continua possível.
 **Efeito de AMB-014:** o arredondamento de valores negativos segue a RN-009.
@@ -395,6 +429,7 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Depende de:** todas as demais.
 **Efeito de AMB-014:** o arredondamento é a primeira etapa (RN-009).
 **Efeito de AMB-007:** a nota é verificada no item, antes da soma do dia (RN-012).
+**Efeito de AMB-012, AMB-015 e AMB-018:** duplicatas e estornos são tratados antes do limite (RN-015, RN-016). Duas hospedagens idênticas também têm as mesmas noites: fica para a §8 decidir se vale a RN-015 (uma é desconsiderada) ou a RN-017 (as duas ficam pendentes).
 **No exemplo:** d-004; d-006 + d-007; d-008.
 
 ### AMB-017 — Tratamento de item com categoria fora da política
@@ -412,9 +447,9 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Ref. levantamento:** A-18
 **Texto original do RH:** "Hospedagem tem limite de R$ 250 por diária."
 **O que não está claro:** o comportamento quando há duas hospedagens com a mesma data. Leituras: tratar como duplicata; considerar só o maior valor; somar os valores. A entrada não traz horário de entrada e saída, só a data.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** hospedagens se sobrepõem quando têm pelo menos uma noite em comum; o dia de saída não conta. Todos os itens sobrepostos ficam pendentes de revisão, com R$ 0,00 (RN-017).
+**Justificativa:** duas hospedagens na mesma noite indicam erro ou gasto em dobro. Sem o valor de cada noite, não há como pagar só a parte sem conflito.
+**Regra afetada:** RN-017
 **Depende de:** AMB-003 e AMB-011 (decididas).
 **Efeito de AMB-002:** se a decisão for "somar", RN-003 passa a valer também para hospedagem.
 **Efeito de AMB-011:** duas hospedagens na mesma data só são duplicatas se tiverem o mesmo conteúdo (RN-005); com valor ou descrição diferentes, a leitura "tratar como duplicata" não se aplica.
@@ -555,6 +590,7 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 **Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
 **Efeito de AMB-019:** passa a existir a situação "pendente de revisão por dia não útil", com valor de R$ 0,00 (RN-007).
 **Efeito de AMB-007:** passa a existir a situação "pendente de nota fiscal", com valor de R$ 0,00 (RN-012).
+**Efeito de AMB-012, AMB-015 e AMB-018:** passam a existir as situações "desconsiderado por duplicata", "pendente de revisão por sobreposição de hospedagem" e "pendente de revisão: estorno sem hospedagem correspondente". Além disso, um estorno pode ter a mesma situação da hospedagem a que está vinculado.
 **Efeito de AMB-029:** a saída precisa de uma situação para o item desconsiderado por identificador repetido e outra para o item recusado por identificador repetido com conteúdo diferente.
 
 ### AMB-032 — Entrada inválida versus item recusado
@@ -599,4 +635,3 @@ O sistema está pronto quando:
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
 - Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
-- Se duplicatas e estornos entram na soma diária depende de AMB-012, AMB-015 e AMB-016.
