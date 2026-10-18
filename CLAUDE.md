@@ -79,7 +79,7 @@ no formato definido na spec.
 - Código pode referenciar identificadores (ex.: `RN-001`) em comentários ou
   referências pertinentes, sem duplicar o texto da regra.
 - O nome de cada teste remete ao requisito que ele verifica.
-  Padrão de nomenclatura: **PENDENTE** (`plan.md`, estratégia de testes).
+  Padrão de nomenclatura: `test_rn001_<caso>` e `test_amb011_<caso>` (DT-005).
 - Task concluída é marcada `[x]` em `tasks.md` ao concluir, não em lote no fim.
   O hash do commit é preenchido depois.
 - A tabela de cobertura de `tasks.md` é atualizada ao fechar cada fase.
@@ -95,9 +95,12 @@ no formato definido na spec.
   descartadas sem autorização.
 - Nunca reescreva o histórico (amend, rebase, force push). Erro de convenção é
   registrado no relatório e corrigido dali em diante.
-- Prefixo para `DECISIONS.md`, `docs/sessions/`, `README.md`,
-  `docs/RELATORIO.md`, `CLAUDE.md` e arquivos de configuração: **PENDENTE**.
-- Prefixo para correção de bug em task já concluída: **PENDENTE**.
+- `DECISIONS.md`: `docs(spec):`, sempre no mesmo commit da alteração da spec.
+- `docs/sessions/`, `README.md`, `docs/RELATORIO.md`, `CLAUDE.md`: `docs:`.
+- Arquivos de configuração (`.gitignore`, `requirements.txt`): `chore:`.
+- Correção de bug em task já concluída: `fix(T-NNN):`.
+- `CLAUDE.md` não sobe em commit isolado: vai junto com o commit da alteração
+  de spec, plan ou tasks que o motivou.
 
 ## Registro de mudanças
 
@@ -119,20 +122,24 @@ no formato definido na spec.
 
 ## Stack e comandos
 
-> **PENDENTE** — preencher a partir de `plan.md` depois que ele for aprovado.
+Conforme `plan.md` (aprovado em 2026-10-18).
 
-- Linguagem: PENDENTE
-- Rodar: PENDENTE
-- Testes: PENDENTE
-- Lint/format: PENDENTE
+- Linguagem: Python 3.10 ou superior (DT-001).
+- Rodar: `python reembolso.py calcular --input <entrada.json> --output <saida.json>` (DT-004).
+- Testes: `pip install pytest`, depois `python -m pytest` (DT-002).
+- Lint/format: nenhum.
 
 ## Convenções de código
 
-> **PENDENTE** — preencher a partir de `plan.md` depois que ele for aprovado.
+Conforme `plan.md`.
 
-- Representação interna de valores monetários: PENDENTE.
+- Representação interna de valores monetários: inteiros em centavos (DT-003).
   (Regras de arredondamento e de comparação de valores são de negócio: ficam na spec.)
-- Nomenclatura, estrutura de pastas, tratamento de erro: PENDENTE.
+- Estrutura: `reembolso.py` (comando e arquivos) e `motor/` (cálculo, sem leitura
+  nem escrita de arquivos) (DT-008); testes em `tests/`, um arquivo por RN (DT-009).
+- Valores da política só em `motor/politica.py` (DT-007).
+- Tratamento de erro: entrada inválida gera `EntradaInvalida`; a mensagem vai para
+  a saída de erro e o código de saída é diferente de zero.
 
 ## Fora de escopo
 
