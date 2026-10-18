@@ -22,6 +22,7 @@
 ## 3. Fora de escopo
 
 - Não gerencia o fluxo de revisão de despesas duplicadas: prazo, responsável e desfecho da revisão (ver AMB-012).
+- Não gerencia o envio posterior da nota fiscal: prazo e reavaliação do item pendente (ver AMB-007).
 - Não gerencia a correção e o reenvio de despesas recusadas por categoria fora da política ou por descrição incompatível com a categoria: quem corrige e em que prazo (ver AMB-017, AMB-030).
 - Não oferece lista de categorias no momento do lançamento da despesa; isso pertence ao sistema que gera a entrada (ver AMB-013).
 - Não trata despesa em moeda estrangeira; todos os valores da entrada são considerados em reais (ver AMB-022).
@@ -164,6 +165,18 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 - hospedagem, "Jantar no hotel" → aceito: tem "hotel", da própria categoria;
 - os 12 itens do exemplo com categoria da política → todos aceitos por esta regra.
 
+### RN-012 — Nota fiscal obrigatória
+
+**Regra:** a nota fiscal é obrigatória para item com valor, já arredondado (RN-009), maior que R$ 100,00. Item sem nota fiscal quando ela é obrigatória não é reembolsado: fica com R$ 0,00, é apresentado como pendente de nota fiscal e não entra na soma do dia (RN-001). O nome da situação na saída é definido na AMB-031.
+**Origem:** política do RH, item 5; AMB-005, AMB-006, AMB-007.
+**Aceite:**
+- d-003, R$ 100,00 sem nota → nota não exigida, segue as demais regras;
+- d-004, R$ 100,01 sem nota → pendente de nota fiscal, R$ 0,00;
+- total de transporte urbano de 2026-07-06 → só d-003, R$ 100,00 → R$ 80,00 reembolsados (RN-002);
+- d-013, R$ 690,00 sem nota → pendente de nota fiscal, R$ 0,00;
+- d-010, R$ 480,00 com nota → segue a RN-004;
+- R$ 100,004 sem nota → arredondado para R$ 100,00 → nota não exigida.
+
 ---
 
 ## 6. Ambiguidades identificadas e decisões
@@ -220,9 +233,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-05
 **Texto original do RH:** "Nota fiscal é obrigatória acima de R$ 100."
 **O que não está claro:** se a exigência vale para valor maior que R$ 100,00 ou maior ou igual a R$ 100,00.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a nota é obrigatória para valor maior que R$ 100,00; R$ 100,00 exato não exige nota (RN-012).
+**Justificativa:** "acima de" tem na spec o mesmo sentido da AMB-004: maior que o valor.
+**Regra afetada:** RN-012
 **Efeito de AMB-014:** a fronteira é comparada com o valor já arredondado (RN-009).
 **No exemplo:** d-003 (R$ 100,00, sem nota); d-004 (R$ 100,01, sem nota).
 
@@ -230,9 +243,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-06
 **Texto original do RH:** "Nota fiscal é obrigatória acima de R$ 100."
 **O que não está claro:** se o patamar é medido sobre o valor original do item, sobre o valor depois do limite ou sobre a soma do dia.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o patamar é medido sobre o valor do próprio item, já arredondado, e não sobre a soma do dia nem sobre o valor depois do limite (RN-012).
+**Justificativa:** a nota fiscal é documento de cada despesa; o patamar se mede no valor da própria despesa.
+**Regra afetada:** RN-012
 **Depende de:** AMB-016.
 **Efeito de AMB-002:** não existe valor pago por item; a leitura "valor depois do limite" só se aplica ao total do dia.
 **No exemplo:** d-004 (R$ 100,01, limite de R$ 80,00); total de 2026-07-06 (R$ 200,01); d-013 (R$ 690,00, sem nota).
@@ -241,9 +254,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-07
 **Texto original do RH:** "Nota fiscal é obrigatória acima de R$ 100."
 **O que não está claro:** o que acontece com o item sem nota quando ela é obrigatória. Leituras: recusar o item; reembolsar até R$ 100,00; marcar como pendente.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o item sem a nota obrigatória fica pendente de nota fiscal, com R$ 0,00 e fora da soma do dia (RN-012). O envio posterior da nota está fora de escopo (§3).
+**Justificativa:** sem a nota obrigatória, a despesa não pode ser paga. A falta pode ser sanada com o envio da nota, por isso o item fica pendente, e não recusado.
+**Regra afetada:** RN-012
 **Depende de:** AMB-031.
 **Efeito de AMB-002:** recusar o item ou limitá-lo a R$ 100,00 altera quanto ele contribui para o total do dia.
 **No exemplo:** d-004; d-013.
@@ -346,6 +359,7 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Regra afetada:** PENDENTE
 **Depende de:** todas as demais.
 **Efeito de AMB-014:** o arredondamento é a primeira etapa (RN-009).
+**Efeito de AMB-007:** a nota é verificada no item, antes da soma do dia (RN-012).
 **No exemplo:** d-004; d-006 + d-007; d-008.
 
 ### AMB-017 — Tratamento de item com categoria fora da política
@@ -503,6 +517,7 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Afeta:** AMB-007, AMB-010, AMB-012, AMB-017.
 **Efeito de AMB-002:** "reembolsado parcialmente" não pode ser situação do item em categoria com limite diário; é preciso uma situação do dia ou uma situação do item como "compõe o total do dia".
 **Efeito de AMB-019:** passa a existir a situação "pendente de revisão por dia não útil", com valor de R$ 0,00 (RN-007).
+**Efeito de AMB-007:** passa a existir a situação "pendente de nota fiscal", com valor de R$ 0,00 (RN-012).
 **Efeito de AMB-029:** a saída precisa de uma situação para o item desconsiderado por identificador repetido e outra para o item recusado por identificador repetido com conteúdo diferente.
 
 ### AMB-032 — Entrada inválida versus item recusado

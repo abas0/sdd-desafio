@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-006 — Lote 3: nota fiscal obrigatória · 2026-10-18
+
+**Gatilho:** decisões de AMB-005, AMB-006 e AMB-007.
+
+**O que mudou na spec:** AMB-005: PENDENTE → nota obrigatória para valor maior que R$ 100,00. AMB-006: PENDENTE → patamar medido sobre o valor do próprio item, já arredondado. AMB-007: PENDENTE → item sem a nota obrigatória fica pendente de nota fiscal, com R$ 0,00 e fora da soma do dia. RN-012 criada; item novo na §3 (envio posterior da nota); notas de efeito em AMB-016 e AMB-031.
+
+**Por quê:** AMB-005: "acima de" tem o mesmo sentido da AMB-004. AMB-006: a nota é documento de cada despesa. AMB-007: sem a nota a despesa não pode ser paga, mas a falta pode ser sanada com o envio da nota.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "R$ 100,00 exige nota" (AMB-005), "soma do dia" e "valor depois do limite" (AMB-006), "recusar" e "reembolsar até R$ 100" (AMB-007).
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-005 — Lote 2: categorias da política e descrição compatível · 2026-10-18
 
 **Gatilho:** decisões de AMB-013, AMB-017 e AMB-030.
