@@ -112,11 +112,16 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 ### RN-007 — Dia não útil
 
 **Regra:** são dias não úteis o sábado, o domingo e os feriados nacionais: 01/01, 21/04, 01/05, 07/09, 12/10, 02/11, 15/11, 20/11 e 25/12, além da Sexta-feira Santa (dois dias antes do Domingo de Páscoa do ano). Feriados estaduais e municipais não são considerados. A despesa com data em dia não útil não é reembolsada: fica com valor reembolsado de R$ 0,00, é apresentada como pendente de revisão por dia não útil e não entra na soma do dia (RN-001). O nome da situação na saída é definido na AMB-031.
-**Origem:** AMB-019.
+
+**Exceção:** um item de hospedagem com data de entrada em dia não útil segue as demais regras se os dias cobertos pela estadia (RN-013) incluem pelo menos um dia útil. Alimentação e transporte urbano em dia não útil ficam pendentes de revisão mesmo em dia de viagem.
+**Origem:** AMB-019, AMB-008.
 **Aceite:**
 - d-012 (2026-07-18, sábado, alimentação, R$ 47,20) → pendente de revisão, R$ 0,00, fora do total de alimentação de 2026-07-18;
 - despesa em 2026-04-03 (Sexta-feira Santa) ou em 2026-04-21 (terça-feira, Tiradentes) → pendente de revisão;
-- despesa em 2026-02-17 (terça-feira de Carnaval) ou em 2026-07-20 (segunda-feira) → dia útil, segue as demais regras.
+- despesa em 2026-02-17 (terça-feira de Carnaval) ou em 2026-07-20 (segunda-feira) → dia útil, segue as demais regras;
+- hospedagem com entrada em 2026-07-19 (domingo), 1 diária → cobre 19 e 20/07 (segunda) → segue as demais regras;
+- hospedagem com entrada em 2026-07-18 (sábado), 1 diária → cobre 18 e 19/07, sem dia útil → pendente de revisão;
+- jantar em 2026-07-19 (domingo), durante essa estadia → pendente de revisão.
 
 ### RN-008 — Despesa de valor zero
 
@@ -176,6 +181,35 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 - d-013, R$ 690,00 sem nota → pendente de nota fiscal, R$ 0,00;
 - d-010, R$ 480,00 com nota → segue a RN-004;
 - R$ 100,004 sem nota → arredondado para R$ 100,00 → nota não exigida.
+
+### RN-013 — Colaborador em viagem
+
+**Regra:** a data informada na hospedagem é a data de entrada. A estadia cobre a data de entrada, os dias seguintes, um por diária (RN-004), e o dia de saída: são cobertos "número de diárias + 1" dias. Um dia é de viagem quando:
+- é coberto por uma estadia; ou
+- há na data um item cuja descrição contém uma das palavras de viagem: aeroporto, rodoviária, viagem, voo ou embarque. A comparação segue a RN-011.
+
+Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recusados, pendentes ou desconsiderados). Em dia de viagem, os limites diários de alimentação e transporte urbano são ampliados em 50%: passam a R$ 90,00 e R$ 120,00. O teto de hospedagem e o patamar da nota fiscal (RN-012) não mudam. Em dia não útil, a ampliação não tem efeito, porque alimentação e transporte ficam pendentes (RN-007).
+**Origem:** política do RH, item 6; AMB-008, AMB-009.
+**Aceite:**
+- d-010 (entrada em 2026-07-14, "2 diarias") → 14, 15 e 16/07 são dias de viagem;
+- d-013 (entrada em 2026-07-22, "3 noites", pendente de nota) → 22 a 25/07 são dias de viagem;
+- d-003 ("Corrida aeroporto", 06/07) → dia de viagem; o total de transporte urbano de 06/07 é R$ 100,00 (d-004 está pendente) → R$ 100,00 reembolsados (limite de R$ 120,00);
+- d-011 (15/07, alimentação, R$ 33,33) → limite de R$ 90,00; R$ 33,33 reembolsados;
+- alimentação de R$ 80,00 em 2026-07-23 (dia coberto por d-013) → R$ 80,00 reembolsados;
+- 03/07, alimentação de R$ 110,50, sem viagem → R$ 60,00 reembolsados;
+- hospedagem em dia de viagem → o teto continua em R$ 250,00 por diária;
+- corrida de R$ 110,00 sem nota em dia de viagem → pendente de nota fiscal.
+
+### RN-014 — Período de competência
+
+**Regra:** o período vai do início ao fim informados, incluindo os dois dias. O início deve ser o primeiro dia do mês da competência, e o fim, o último dia desse mês; caso contrário, a entrada é inválida (AMB-021). Um item com data fora do período é recusado com a justificativa "fora do período de competência", fica com R$ 0,00 e não entra em nenhuma soma. Para hospedagem, vale a data de entrada informada: diárias que passam do fim do período não são cortadas.
+**Origem:** política do RH, item 7; AMB-010.
+**Aceite:**
+- d-008 (2026-04-15) → recusado, fora do período;
+- d-014 (2026-07-31) e um item em 2026-07-01 → dentro do período;
+- competência 2026-07 com fim em 2026-07-15 ou em 2026-08-05 → entrada inválida;
+- hospedagem com entrada em 2026-07-30, "3 diárias", R$ 600,00 → dentro do período, teto de R$ 750,00, R$ 600,00 reembolsados;
+- hospedagem com entrada em 2026-08-10 no arquivo de julho → recusada, fora do período.
 
 ---
 
@@ -265,9 +299,10 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-08
 **Texto original do RH:** "Colaborador em viagem tem limites ampliados em 50%."
 **O que não está claro:** a entrada não traz nenhuma informação de viagem. Leituras: deduzir de outros dados (existência de hospedagem, palavras na descrição); exigir um dado que a entrada não traz; não aplicar a regra enquanto o dado não existir.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** o dia de viagem é definido pela RN-013, considerando a data informada na hospedagem como data de entrada.
+**Justificativa:** a entrada não traz o dado de viagem (AMB-033). Hospedagem e palavras de deslocamento são os indícios objetivos disponíveis, e a data de entrada permite saber quais dias a estadia cobre.
+**Limitação:** a entrada não informa o horário nem a finalidade da despesa. Em dia útil, o sistema não distingue gasto de lazer (por exemplo, um happy hour) de gasto de trabalho, e ambos seguem as regras normais. Em dia não útil, alimentação e transporte ficam pendentes de revisão (RN-007).
+**Regra afetada:** RN-013, RN-007
 **Depende de:** AMB-033 (decidida).
 **Efeito de AMB-033:** a leitura "exigir um dado que a entrada não traz" fica descartada.
 **No exemplo:** d-003 ("Corrida aeroporto"); d-010 ("Hotel Rio"); d-011 (café no hotel); d-013.
@@ -276,9 +311,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-09
 **Texto original do RH:** "Colaborador em viagem tem limites ampliados em 50%."
 **O que não está claro:** (1) se, além dos limites de categoria (R$ 90, R$ 120, R$ 375), o patamar de R$ 100 da nota fiscal também é ampliado; (2) se a ampliação vale só nos dias da viagem ou em todo o período de competência em que houve viagem.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** a ampliação vale para alimentação (R$ 90,00) e transporte urbano (R$ 120,00), só nos dias de viagem. O teto de hospedagem e o patamar da nota fiscal não mudam (RN-013).
+**Justificativa:** quem se hospeda já está em viagem, então o teto de hospedagem já é um teto de viagem. Manter a nota acima de R$ 100 evita dois patamares diferentes.
+**Regra afetada:** RN-013
 **Depende de:** AMB-008.
 **No exemplo:** depende de AMB-008.
 
@@ -286,9 +321,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** A-10
 **Texto original do RH:** "Despesas devem ser lançadas dentro do período de competência."
 **O que não está claro:** se vale a data da despesa ou a data de lançamento (que a entrada não traz); qual informação define o período (competência ou início/fim) se discordarem; se as datas de início e fim estão dentro do período; se o item fora do período é recusado, sinalizado ou admitido com tolerância.
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** vale a data informada da despesa. O período vai do início ao fim informados, inclusive, e deve ser exatamente o mês da competência; se não for, a entrada é inválida. Um item fora do período é recusado. Uma hospedagem cujas diárias passam do fim do período não é cortada (RN-014).
+**Justificativa:** a entrada traz o período e a competência, que precisam corresponder. Manter a data informada como única referência evita cortar diárias sem saber o valor de cada uma.
+**Regra afetada:** RN-014
 **Depende de:** AMB-031, AMB-033 (decidida).
 **Efeito de AMB-033:** a leitura "data de lançamento" fica descartada, pois a entrada não traz essa data.
 **Efeito de AMB-003:** uma hospedagem de várias diárias pode ter diárias fora do período de competência.
@@ -384,6 +419,7 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Efeito de AMB-002:** se a decisão for "somar", RN-003 passa a valer também para hospedagem.
 **Efeito de AMB-011:** duas hospedagens na mesma data só são duplicatas se tiverem o mesmo conteúdo (RN-005); com valor ou descrição diferentes, a leitura "tratar como duplicata" não se aplica.
 **Efeito de AMB-003:** uma hospedagem de várias diárias cobre várias datas e pode se sobrepor a outra mesmo com datas informadas diferentes.
+**Efeito de AMB-008:** a data informada da hospedagem é a data de entrada. Com isso, estadias podem se sobrepor mesmo com datas diferentes.
 **No exemplo:** nenhum (d-010 e d-013 não se sobrepõem).
 
 ### AMB-019 — Dias não úteis
@@ -393,6 +429,7 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Decisão:** despesa em dia não útil (sábado, domingo ou feriado nacional, conforme RN-007) não é reembolsada e fica pendente de revisão. O fluxo de revisão e os feriados estaduais e municipais estão fora de escopo (§3).
 **Justificativa:** a política não menciona dia não útil, mas a despesa nesse dia foge do padrão de trabalho e precisa ser confirmada antes do reembolso. A lista de feriados fica na spec porque a entrada não a traz (AMB-033).
 **Regra afetada:** RN-007
+**Efeito de AMB-008:** a hospedagem com entrada em dia não útil segue as demais regras se a estadia cobre pelo menos um dia útil (RN-007).
 **No exemplo:** d-012 (sábado, "plantao").
 
 ### AMB-020 — Despesa de valor zero
@@ -476,9 +513,9 @@ As palavras são comparadas sem diferenciar maiúsculas e acentos, como palavra 
 **Ref. levantamento:** L-10
 **Texto original do RH:** nenhum.
 **O que não está claro:** se alimentação no próprio local de hospedagem (como café da manhã) tem tratamento diferente, por exemplo por já estar incluída na diária, e se indica viagem (AMB-008).
-**Decisão:** PENDENTE
-**Justificativa:** PENDENTE
-**Regra afetada:** PENDENTE
+**Decisão:** sem tratamento especial; segue a regra de alimentação.
+**Justificativa:** a política não diz que a alimentação está incluída na diária.
+**Regra afetada:** nenhuma (segue RN-001 e RN-013).
 **Depende de:** AMB-008.
 **No exemplo:** d-011.
 
@@ -562,5 +599,4 @@ O sistema está pronto quando:
 
 - As ambiguidades marcadas como PENDENTE na §6 ainda não têm decisão.
 - Como o total do dia e a situação de cada item aparecem na saída depende da §4 (AMB-024, AMB-027, AMB-031).
-- Se duplicatas, estornos e despesas fora do período entram na soma diária depende de AMB-010, AMB-012, AMB-015 e AMB-016.
-- O valor do limite pode ser ampliado para colaborador em viagem (AMB-008 e AMB-009).
+- Se duplicatas e estornos entram na soma diária depende de AMB-012, AMB-015 e AMB-016.

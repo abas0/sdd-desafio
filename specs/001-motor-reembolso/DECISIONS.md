@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-007 — Lote 4: viagem e competência · 2026-10-18
+
+**Gatilho:** decisões das AMB-008, AMB-009, AMB-010 e AMB-028, e a exceção para hospedagem na AMB-019.
+
+**O que mudou na spec:** AMB-008: PENDENTE → dia de viagem coberto por estadia ou com palavra de viagem, com a data da hospedagem como data de entrada (RN-013 criada), com o registro da limitação de lazer × trabalho. AMB-009: PENDENTE → ampliação só de alimentação e transporte, só nos dias de viagem. AMB-010: PENDENTE → período igual ao mês da competência; item fora do período recusado; diárias não cortadas (RN-014 criada). AMB-028: PENDENTE → sem tratamento especial. RN-007 alterada com a exceção para hospedagem. Notas de efeito nas AMB-018 e AMB-019; §10 atualizada.
+
+**Por quê:** AMB-008: a entrada não traz o dado de viagem; hospedagem e palavras de deslocamento são os indícios objetivos disponíveis. AMB-009: quem se hospeda já está em viagem. AMB-010: período e competência precisam corresponder, e a data informada é a única referência. AMB-028: a política não diz que a alimentação está incluída na diária. RN-007: chegar na véspera de um dia útil é comum em viagens a trabalho.
+
+**O que isso invalidou:** nenhuma implementação existente. Ficam descartadas as leituras "não aplicar a ampliação" (AMB-008); "ampliar o patamar da nota", "ampliar a hospedagem" e "ampliar o mês inteiro" (AMB-009); "aceitar fora do período" e "cortar diárias fora do período" (AMB-010); "alimentação incluída na diária" (AMB-028). Muda parte da D-004: a hospedagem em dia não útil deixa de ficar sempre pendente.
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-006 — Lote 3: nota fiscal obrigatória · 2026-10-18
 
 **Gatilho:** decisões de AMB-005, AMB-006 e AMB-007.
