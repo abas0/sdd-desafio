@@ -13,11 +13,11 @@
 
 ## 1. Problema
 
-<Duas ou três frases. Quem sofre hoje, com o quê, e por quê isso custa caro.>
+O RH recebe as despesas lançadas pelos colaboradores e precisa aplicar uma política de reembolso de nove itens, escrita em linguagem natural e com lacunas. Aplicada à mão, a mesma despesa recebe decisões diferentes conforme quem a analisa, e o colaborador nem sempre sabe por que recebeu menos do que gastou.
 
 ## 2. Objetivo
 
-<Uma frase. O que passa a ser verdade quando isto existir.>
+Dado o arquivo de despesas de um colaborador em um período de competência, o sistema calcula, sempre da mesma forma, quanto é reembolsado e justifica a decisão sobre cada despesa, conforme as regras desta spec.
 
 ## 3. Fora de escopo
 
@@ -904,7 +904,27 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 
 | Caso | Entrada | Comportamento esperado | Regra |
 |---|---|---|---|
-| | | | |
+| Total igual ao limite | alimentação, total do dia de R$ 60,00 | R$ 60,00, situação `integral` | RN-002 |
+| Um centavo acima do limite | alimentação, total do dia de R$ 60,01 | R$ 60,00, situação `parcial` | RN-002 |
+| Nota no limite | R$ 100,00 sem nota | nota não exigida | RN-012 |
+| Nota acima do limite | R$ 100,01 sem nota | pendente, `nota_fiscal_ausente` | RN-012 |
+| Arredondamento que evita a nota | R$ 100,004 sem nota | R$ 100,00; nota não exigida | RN-009, RN-012 |
+| Meio centavo | R$ 33,335 | R$ 33,34 | RN-009 |
+| Valor zero | R$ 0,00 | recusado, `valor_zero` | RN-008 |
+| Estorno sozinho no dia | −R$ 45,00 em dia útil | total do dia −R$ 45,00; reembolso R$ 0,00, `sem_valor` | RN-016 |
+| Categoria com grafia diferente | "ALIMENTACAO", "transporte-urbano" | reconhecidas | RN-010 |
+| Categoria fora da política | "coworking" | recusado, `categoria_fora_da_politica` | RN-010 |
+| Descrição de outra categoria | hospedagem "Almoço com cliente" | recusado, `descricao_incompativel` | RN-011 |
+| Hospedagem sem número de diárias | "Hotel 3 estrelas" | 1 diária, teto de R$ 250,00 | RN-004 |
+| Hospedagem com entrada no domingo | domingo, 1 diária | cobre a segunda; segue as demais regras | RN-007, RN-013 |
+| Feriado móvel | despesa na Sexta-feira Santa | pendente, `dia_nao_util` | RN-007 |
+| Dia de viagem | alimentação em dia coberto por hospedagem | limite de R$ 90,00 | RN-013 |
+| Último dia do período | data 2026-07-31 | dentro do período | RN-014 |
+| Mesmo id, conteúdo diferente | dois `d-020` diferentes | os dois recusados | RN-006 |
+| Hospedagens com noite em comum | entradas em 20/07 (2 diárias) e 21/07 (1 diária) | as duas pendentes, `sobreposicao_hospedagem` | RN-017 |
+| Dois motivos | sábado e fora do período | recusado (`fora_do_periodo`), `outros_motivos`: [`dia_nao_util`] | RN-019, §8 |
+| Item malformado | `"valor": "abc"` | entrada inválida, sem saída | RN-018 |
+| Lista vazia | `"despesas": []` | saída sem itens, total R$ 0,00 | RN-018 |
 
 ## 8. Ordem de aplicação das regras
 
@@ -923,8 +943,14 @@ A situação e o motivo de cada item vêm da primeira regra das etapas 3 a 5 que
 
 O sistema está pronto quando:
 
-- [ ] <critério verificável, sem ler código>
-- [ ] <...>
+- [ ] `<comando> calcular --input exemplos/despesas-exemplo.json --output <saida.json>` grava uma saída igual à do exemplo da §4 em todos os campos, exceto o texto das justificativas.
+- [ ] Cada caso de aceite das RN-001 a RN-019 produz o resultado descrito na regra.
+- [ ] Cada caso da §7 produz o comportamento descrito.
+- [ ] A saída tem um item por despesa da entrada, na mesma ordem, cada um com situação e justificativa.
+- [ ] Nenhum valor reembolsado ultrapassa o limite ou o teto aplicável.
+- [ ] `total_reembolsado` é igual à soma dos totais diários e das hospedagens calculadas.
+- [ ] Com entrada inválida, nenhuma saída é gravada, o problema é informado e o comando termina indicando erro.
+- [ ] A mesma entrada produz sempre a mesma saída.
 
 ## 10. O que fica em aberto
 

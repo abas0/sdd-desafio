@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-011 — Problema, objetivo, casos de borda e critérios de aceite · 2026-10-18
+
+**Gatilho:** preenchimento das seções restantes da spec depois de todas as ambiguidades decididas.
+
+**O que mudou na spec:** §1 (problema), §2 (objetivo), §7 (casos de borda, consolidados a partir dos aceites das RNs) e §9 (critérios de aceite) preenchidas.
+
+**Por quê:** fechar a spec antes do `plan.md` e do `tasks.md`, para que alguém que nunca viu o projeto consiga verificar o sistema lendo só a spec.
+
+**O que isso invalidou:** nada; nenhuma regra nova, só consolidação do que já estava decidido.
+
+**Tasks afetadas:** nenhuma; `tasks.md` ainda não existe.
+
+**Custo:** 2 arquivos (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-010 — Lote 7: ordem de aplicação das regras · 2026-10-18
 
 **Gatilho:** decisão da AMB-016.
