@@ -81,7 +81,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn012_nota_fiscal.py`
   - **Commit:**
 
-- [ ] **T-014** — Hospedagens sobrepostas
+- [x] **T-014** — Hospedagens sobrepostas
   - **Atende:** RN-017, AMB-018
   - **Aceite:** `tests/test_rn017_sobreposicao.py`
   - **Commit:**

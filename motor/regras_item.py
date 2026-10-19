@@ -3,7 +3,7 @@
 import re
 
 from motor.calendario import dia_nao_util
-from motor.diarias import dias_cobertos_pela_estadia
+from motor.diarias import dias_cobertos_pela_estadia, noites_da_estadia
 from motor.modelo import Ocorrencia
 from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA, PATAMAR_NOTA_FISCAL
 from motor.texto import contem_alguma, normalizar
@@ -133,3 +133,19 @@ def pendente_por_nota_fiscal(despesa):
     if despesa.valor > PATAMAR_NOTA_FISCAL and not despesa.tem_nota_fiscal:
         return Ocorrencia("pendente", "nota_fiscal_ausente", "RN-012")
     return None
+
+
+def sobreposicoes(despesas, excluidas=frozenset()):
+    """RN-017: estadias com pelo menos uma noite em comum ficam todas pendentes.
+    `excluidas` são posições desconsideradas ou recusadas nas etapas 3 e 4 da §8."""
+    estadias = [d for d in despesas if d.posicao not in excluidas and eh_estadia(d)]
+    noites = {d.posicao: set(noites_da_estadia(d)) for d in estadias}
+    sobrepostas = set()
+    for i, a in enumerate(estadias):
+        for b in estadias[i + 1 :]:
+            if noites[a.posicao] & noites[b.posicao]:
+                sobrepostas.update((a.posicao, b.posicao))
+    return {
+        posicao: Ocorrencia("pendente", "sobreposicao_hospedagem", "RN-017")
+        for posicao in sorted(sobrepostas)
+    }
