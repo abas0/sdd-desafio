@@ -19,7 +19,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `python -m pytest` roda; `python reembolso.py --help` mostra o comando `calcular`
   - **Commit:** `<hash preenchido depois>`
 
-- [ ] **T-002** — Leitura e validação da entrada
+- [x] **T-002** — Leitura e validação da entrada
   - **Atende:** RN-018, AMB-021, AMB-032, AMB-033
   - **Aceite:** `tests/test_rn018_entrada_invalida.py`
   - **Commit:**
