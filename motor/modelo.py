@@ -39,6 +39,15 @@ class Ocorrencia:
 
 
 @dataclass(frozen=True)
+class SituacaoItem:
+    """Resultado das etapas 3 a 5 da §8 da spec para um item (RN-019)."""
+
+    despesa: Despesa
+    ocorrencia: Ocorrencia | None
+    outros_motivos: tuple = ()
+
+
+@dataclass(frozen=True)
 class Entrada:
     colaborador: dict
     periodo: dict

@@ -4,7 +4,7 @@ import re
 
 from motor.calendario import dia_nao_util
 from motor.diarias import dias_cobertos_pela_estadia, noites_da_estadia
-from motor.modelo import Ocorrencia
+from motor.modelo import Ocorrencia, SituacaoItem
 from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA, PATAMAR_NOTA_FISCAL
 from motor.texto import contem_alguma, normalizar
 
@@ -149,3 +149,45 @@ def sobreposicoes(despesas, excluidas=frozenset()):
         posicao: Ocorrencia("pendente", "sobreposicao_hospedagem", "RN-017")
         for posicao in sorted(sobrepostas)
     }
+
+
+def avaliar_situacoes(entrada):
+    """Etapas 3 a 5 da §8 da spec: cópias, recusas e pendências, nesta ordem.
+    A primeira ocorrência define a situação; as demais vão para `outros_motivos` (RN-019)."""
+    despesas = entrada.despesas
+    repetidos = identificadores_repetidos(despesas)
+    copias = {**repetidos, **duplicatas(despesas, excluidas=set(repetidos))}
+
+    recusas = {
+        d.posicao: [
+            o
+            for o in (
+                categoria_fora_da_politica(d),
+                descricao_incompativel(d),
+                fora_do_periodo(d, entrada.inicio, entrada.fim),
+                valor_zero(d),
+            )
+            if o is not None
+        ]
+        for d in despesas
+    }
+    retiradas = set(copias) | {p for p, lista in recusas.items() if lista}
+    sobrepostas = sobreposicoes(despesas, excluidas=retiradas)
+
+    situacoes = []
+    for d in despesas:
+        ocorrencias = [o for o in (copias.get(d.posicao),) if o is not None]
+        ocorrencias += recusas[d.posicao]
+        ocorrencias += [
+            o
+            for o in (
+                pendente_por_dia_nao_util(d),
+                pendente_por_nota_fiscal(d),
+                sobrepostas.get(d.posicao),
+            )
+            if o is not None
+        ]
+        principal = ocorrencias[0] if ocorrencias else None
+        outros = tuple(o.motivo for o in ocorrencias[1:])
+        situacoes.append(SituacaoItem(d, principal, outros))
+    return situacoes

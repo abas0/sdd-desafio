@@ -86,7 +86,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn017_sobreposicao.py`
   - **Commit:**
 
-- [ ] **T-015** — Ordem das regras e `outros_motivos`
+- [x] **T-015** — Ordem das regras e `outros_motivos`
   - **Atende:** RN-019, AMB-016, AMB-025
   - **Aceite:** `tests/test_rn019_ordem_e_motivos.py`
   - **Commit:**
