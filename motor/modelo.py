@@ -48,6 +48,21 @@ class SituacaoItem:
 
 
 @dataclass(frozen=True)
+class TotalDiario:
+    """Total de alimentação ou transporte urbano em um dia (RN-001 a RN-003). Valores em centavos."""
+
+    data: date
+    categoria: str
+    itens: tuple
+    valor_total: int
+    em_viagem: bool
+    origem_viagem: str | None
+    limite: int
+    valor_reembolsado: int
+    situacao: str
+
+
+@dataclass(frozen=True)
 class Entrada:
     colaborador: dict
     periodo: dict

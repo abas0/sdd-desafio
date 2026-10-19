@@ -98,7 +98,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn013_viagem.py`
   - **Commit:**
 
-- [ ] **T-017** — Soma do dia, limite e valor apurado por dia
+- [x] **T-017** — Soma do dia, limite e valor apurado por dia
   - **Atende:** RN-001, RN-002, RN-003, AMB-001, AMB-002, AMB-004
   - **Aceite:** `tests/test_rn001_limite_diario.py`, `tests/test_rn002_teto.py`, `tests/test_rn003_valor_por_dia.py`
   - **Commit:**
