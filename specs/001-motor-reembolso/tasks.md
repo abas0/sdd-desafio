@@ -17,27 +17,27 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 - [x] **T-001** — Estrutura do projeto: `reembolso.py`, `motor/`, `tests/` e `requirements.txt` com o pytest
   - **Atende:** DT-001, DT-002, DT-004, DT-008
   - **Aceite:** `python -m pytest` roda; `python reembolso.py --help` mostra o comando `calcular`
-  - **Commit:** `<hash preenchido depois>`
+  - **Commit:** `f4cb359`
 
 - [x] **T-002** — Leitura e validação da entrada
   - **Atende:** RN-018, AMB-021, AMB-032, AMB-033
   - **Aceite:** `tests/test_rn018_entrada_invalida.py`
-  - **Commit:**
+  - **Commit:** `c3baaf7`
 
 - [x] **T-003** — Arredondamento e conversão dos valores em centavos
   - **Atende:** RN-009, AMB-014, DT-003
   - **Aceite:** `tests/test_rn009_arredondamento.py`
-  - **Commit:**
+  - **Commit:** `8d30976`
 
 - [x] **T-004** — Calendário: fins de semana, feriados nacionais e Sexta-feira Santa
   - **Atende:** RN-007 (parte), AMB-019
   - **Aceite:** `tests/test_rn007_calendario.py`
-  - **Commit:**
+  - **Commit:** `0ae59e7`
 
 - [x] **T-005** — Número de diárias lido na descrição
   - **Atende:** RN-004 (parte), AMB-003
   - **Aceite:** `tests/test_rn004_diarias.py`
-  - **Commit:**
+  - **Commit:** `4cf93b0`
 
 ## Fase 2 — Regras por item
 
@@ -140,6 +140,10 @@ Preenchida ao fechar cada fase.
 
 | Regra da spec | Task | Teste |
 |---|---|---|
-| | | |
+| RN-004 (número de diárias), AMB-003 | T-005 | `tests/test_rn004_diarias.py` |
+| RN-007 (calendário), AMB-019 | T-004 | `tests/test_rn007_calendario.py` |
+| RN-009, AMB-014 | T-003 | `tests/test_rn009_arredondamento.py` |
+| RN-018, AMB-021, AMB-032, AMB-033 | T-002 | `tests/test_rn018_entrada_invalida.py` |
+| RN-014 (período inválido) | T-002 | `tests/test_rn018_entrada_invalida.py::test_rn018_periodo_diferente_do_mes_da_competencia_e_invalido` |
 
 AMB-022 e AMB-023 são premissas, sem comportamento a testar: não têm task.
