@@ -100,3 +100,10 @@ def fora_do_periodo(despesa, inicio, fim):
     if not inicio <= despesa.data <= fim:
         return Ocorrencia("recusado", "fora_do_periodo", "RN-014")
     return None
+
+
+def valor_zero(despesa):
+    """RN-008: recusa o item de valor zero, já arredondado."""
+    if despesa.valor == 0:
+        return Ocorrencia("recusado", "valor_zero", "RN-008")
+    return None

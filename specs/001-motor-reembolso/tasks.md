@@ -66,7 +66,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn014_periodo.py`
   - **Commit:**
 
-- [ ] **T-011** — Valor zero
+- [x] **T-011** — Valor zero
   - **Atende:** RN-008, AMB-020
   - **Aceite:** `tests/test_rn008_valor_zero.py`
   - **Commit:**
