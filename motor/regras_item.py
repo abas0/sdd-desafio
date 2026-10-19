@@ -2,6 +2,8 @@
 
 import re
 
+from motor.calendario import dia_nao_util
+from motor.diarias import dias_cobertos_pela_estadia
 from motor.modelo import Ocorrencia
 from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA
 from motor.texto import contem_alguma, normalizar
@@ -107,3 +109,14 @@ def valor_zero(despesa):
     if despesa.valor == 0:
         return Ocorrencia("recusado", "valor_zero", "RN-008")
     return None
+
+
+def pendente_por_dia_nao_util(despesa):
+    """RN-007: item em dia não útil fica pendente; a hospedagem cuja estadia cobre um dia útil, não."""
+    if not dia_nao_util(despesa.data):
+        return None
+    if reconhecer_categoria(despesa.categoria_informada) == "hospedagem" and any(
+        not dia_nao_util(dia) for dia in dias_cobertos_pela_estadia(despesa)
+    ):
+        return None
+    return Ocorrencia("pendente", "dia_nao_util", "RN-007")

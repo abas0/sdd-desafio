@@ -1,6 +1,7 @@
 """Número de diárias lido na descrição da hospedagem (RN-004; AMB-003)."""
 
 import re
+from datetime import timedelta
 
 from motor.texto import normalizar
 
@@ -30,6 +31,18 @@ def numero_de_diarias(descricao):
         if numero is not None and numero >= 1:
             total += numero
     return total if total else 1
+
+
+def noites_da_estadia(despesa):
+    """Noites da estadia: a data de entrada e os dias seguintes, uma por diária (RN-017)."""
+    n = numero_de_diarias(despesa.descricao)
+    return [despesa.data + timedelta(days=k) for k in range(n)]
+
+
+def dias_cobertos_pela_estadia(despesa):
+    """Dias cobertos: as noites e o dia de saída, "diárias + 1" dias (RN-013)."""
+    n = numero_de_diarias(despesa.descricao)
+    return [despesa.data + timedelta(days=k) for k in range(n + 1)]
 
 
 def _numero_no_fim(tokens):

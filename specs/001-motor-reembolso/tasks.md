@@ -71,7 +71,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn008_valor_zero.py`
   - **Commit:**
 
-- [ ] **T-012** — Dia não útil, com a exceção para hospedagem
+- [x] **T-012** — Dia não útil, com a exceção para hospedagem
   - **Atende:** RN-007, AMB-019
   - **Aceite:** `tests/test_rn007_dia_nao_util.py`
   - **Commit:**
