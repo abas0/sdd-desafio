@@ -38,3 +38,8 @@ def test_rn007_jantar_no_domingo_durante_a_estadia_fica_pendente():
 def test_rn007_d009_estorno_no_sabado_fica_pendente():
     estorno = despesa(id="d-009", data="2026-07-11", categoria="transporte_urbano", descricao="Estorno de corrida cancelada", valor="-45.00", nota=False)
     assert pendente_por_dia_nao_util(estorno).motivo == "dia_nao_util"
+
+
+def test_rn007_estorno_de_hospedagem_no_sabado_fica_pendente():
+    estorno = despesa(data="2026-07-18", categoria="hospedagem", descricao="Estorno 2 diárias", valor="-80.00")
+    assert pendente_por_dia_nao_util(estorno).motivo == "dia_nao_util"

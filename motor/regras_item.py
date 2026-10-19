@@ -111,11 +111,17 @@ def valor_zero(despesa):
     return None
 
 
+def eh_estadia(despesa):
+    """Item de hospedagem de valor positivo; estornos não são estadias (RN-007, RN-017)."""
+    return reconhecer_categoria(despesa.categoria_informada) == "hospedagem" and despesa.valor > 0
+
+
 def pendente_por_dia_nao_util(despesa):
-    """RN-007: item em dia não útil fica pendente; a hospedagem cuja estadia cobre um dia útil, não."""
+    """RN-007: item em dia não útil fica pendente; a estadia que cobre um dia útil, não.
+    Estorno de hospedagem não é estadia (D-012)."""
     if not dia_nao_util(despesa.data):
         return None
-    if reconhecer_categoria(despesa.categoria_informada) == "hospedagem" and any(
+    if eh_estadia(despesa) and any(
         not dia_nao_util(dia) for dia in dias_cobertos_pela_estadia(despesa)
     ):
         return None
