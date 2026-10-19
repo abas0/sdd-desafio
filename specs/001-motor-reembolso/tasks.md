@@ -41,7 +41,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 
 ## Fase 2 — Regras por item
 
-- [ ] **T-006** — Mesmo conteúdo e identificador repetido
+- [x] **T-006** — Mesmo conteúdo e identificador repetido
   - **Atende:** RN-005, RN-006, AMB-011, AMB-029
   - **Aceite:** `tests/test_rn005_mesmo_conteudo.py`, `tests/test_rn006_identificador_repetido.py`
   - **Commit:**

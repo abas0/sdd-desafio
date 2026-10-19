@@ -29,6 +29,16 @@ class Despesa:
 
 
 @dataclass(frozen=True)
+class Ocorrencia:
+    """Regra que se aplica a um item e a situação que ela determina (§4 da spec)."""
+
+    situacao: str
+    motivo: str
+    regra: str
+    referencia: str | None = None
+
+
+@dataclass(frozen=True)
 class Entrada:
     colaborador: dict
     periodo: dict
