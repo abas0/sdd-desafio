@@ -93,7 +93,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 
 ## Fase 3 — Valores
 
-- [ ] **T-016** — Dias de viagem
+- [x] **T-016** — Dias de viagem
   - **Atende:** RN-013, AMB-008, AMB-009, AMB-028
   - **Aceite:** `tests/test_rn013_viagem.py`
   - **Commit:**

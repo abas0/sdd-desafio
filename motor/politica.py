@@ -30,3 +30,6 @@ PALAVRAS_POR_CATEGORIA = {
 
 # Nota fiscal obrigatória para valor maior que este, em centavos (RN-012).
 PATAMAR_NOTA_FISCAL = 10000
+
+# Palavras que marcam o dia como de viagem, na descrição de qualquer item (RN-013).
+PALAVRAS_VIAGEM = ("aeroporto", "rodoviária", "viagem", "voo", "embarque")
