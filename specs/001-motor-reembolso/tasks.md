@@ -46,7 +46,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn005_mesmo_conteudo.py`, `tests/test_rn006_identificador_repetido.py`
   - **Commit:**
 
-- [ ] **T-007** — Duplicatas
+- [x] **T-007** — Duplicatas
   - **Atende:** RN-015, AMB-012
   - **Aceite:** `tests/test_rn015_duplicatas.py`
   - **Commit:**

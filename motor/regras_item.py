@@ -37,3 +37,21 @@ def identificadores_repetidos(despesas):
                     "recusado", "identificador_repetido_conteudo_diferente", "RN-006"
                 )
     return ocorrencias
+
+
+def duplicatas(despesas, excluidas=frozenset()):
+    """RN-015: entre itens de identificadores diferentes, o primeiro de cada conteúdo é calculado
+    e os demais são desconsiderados. `excluidas` são posições já retiradas pela RN-006."""
+    originais = []
+    ocorrencias = {}
+    for despesa in despesas:
+        if despesa.posicao in excluidas:
+            continue
+        original = next((o for o in originais if mesmo_conteudo(o, despesa)), None)
+        if original is None:
+            originais.append(despesa)
+        else:
+            ocorrencias[despesa.posicao] = Ocorrencia(
+                "desconsiderado", "duplicata", "RN-015", original.id
+            )
+    return ocorrencias
