@@ -14,7 +14,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 
 ## Fase 1 — Fundação
 
-- [ ] **T-001** — Estrutura do projeto: `reembolso.py`, `motor/`, `tests/` e `requirements.txt` com o pytest
+- [x] **T-001** — Estrutura do projeto: `reembolso.py`, `motor/`, `tests/` e `requirements.txt` com o pytest
   - **Atende:** DT-001, DT-002, DT-004, DT-008
   - **Aceite:** `python -m pytest` roda; `python reembolso.py --help` mostra o comando `calcular`
   - **Commit:** `<hash preenchido depois>`
