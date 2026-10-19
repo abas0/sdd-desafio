@@ -63,6 +63,17 @@ class TotalDiario:
 
 
 @dataclass(frozen=True)
+class CalculoHospedagem:
+    """Cálculo de uma hospedagem (RN-004, RN-016). Valores em centavos."""
+
+    diarias: int
+    teto: int
+    valor_liquido: int | None
+    valor_reembolsado: int
+    situacao: str
+
+
+@dataclass(frozen=True)
 class Entrada:
     colaborador: dict
     periodo: dict

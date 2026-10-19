@@ -39,3 +39,6 @@ LIMITES_DIARIOS = {"alimentacao": 6000, "transporte_urbano": 8000}
 
 # Ampliação dos limites diários em dia de viagem, em porcentagem (RN-013).
 AMPLIACAO_VIAGEM_PERCENTUAL = 50
+
+# Teto de hospedagem por diária, em centavos (RN-004).
+TETO_HOSPEDAGEM_POR_DIARIA = 25000

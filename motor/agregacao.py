@@ -1,7 +1,12 @@
 """Somas do dia, estornos e limites (RN-001 a RN-004, RN-016; etapa 8 da §8 da spec)."""
 
-from motor.modelo import TotalDiario
-from motor.politica import AMPLIACAO_VIAGEM_PERCENTUAL, LIMITES_DIARIOS
+from motor.diarias import numero_de_diarias
+from motor.modelo import CalculoHospedagem, TotalDiario
+from motor.politica import (
+    AMPLIACAO_VIAGEM_PERCENTUAL,
+    LIMITES_DIARIOS,
+    TETO_HOSPEDAGEM_POR_DIARIA,
+)
 from motor.regras_item import reconhecer_categoria
 
 
@@ -49,3 +54,20 @@ def totais_diarios(situacoes, dias_viagem):
             )
         )
     return totais
+
+
+def calcular_hospedagem(despesa, estornos=()):
+    """RN-004: teto de R$ 250,00 por diária, aplicado conforme RN-002.
+    Estornos vinculados são abatidos antes da comparação com o teto (RN-016)."""
+    diarias = numero_de_diarias(despesa.descricao)
+    teto = TETO_HOSPEDAGEM_POR_DIARIA * diarias
+    liquido = despesa.valor + sum(e.valor for e in estornos)
+    reembolsado = max(0, min(liquido, teto))
+    situacao = "reembolsado" if liquido <= teto else "reembolsado_parcialmente"
+    return CalculoHospedagem(
+        diarias=diarias,
+        teto=teto,
+        valor_liquido=liquido if estornos else None,
+        valor_reembolsado=reembolsado,
+        situacao=situacao,
+    )

@@ -103,7 +103,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn001_limite_diario.py`, `tests/test_rn002_teto.py`, `tests/test_rn003_valor_por_dia.py`
   - **Commit:**
 
-- [ ] **T-018** — Teto de hospedagem
+- [x] **T-018** — Teto de hospedagem
   - **Atende:** RN-004, RN-002
   - **Aceite:** `tests/test_rn004_teto_hospedagem.py`
   - **Commit:**
