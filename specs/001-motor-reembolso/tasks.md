@@ -24,7 +24,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn018_entrada_invalida.py`
   - **Commit:**
 
-- [ ] **T-003** — Arredondamento e conversão dos valores em centavos
+- [x] **T-003** — Arredondamento e conversão dos valores em centavos
   - **Atende:** RN-009, AMB-014, DT-003
   - **Aceite:** `tests/test_rn009_arredondamento.py`
   - **Commit:**
