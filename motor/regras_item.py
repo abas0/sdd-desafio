@@ -93,3 +93,10 @@ def descricao_incompativel(despesa):
     if de_outra and not da_categoria:
         return Ocorrencia("recusado", "descricao_incompativel", "RN-011")
     return None
+
+
+def fora_do_periodo(despesa, inicio, fim):
+    """RN-014: recusa o item com data fora do período; em hospedagem vale a data de entrada."""
+    if not inicio <= despesa.data <= fim:
+        return Ocorrencia("recusado", "fora_do_periodo", "RN-014")
+    return None
