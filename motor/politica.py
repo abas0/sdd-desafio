@@ -17,3 +17,6 @@ FERIADOS_FIXOS = frozenset(
 
 # Sexta-feira Santa: dias antes do Domingo de Páscoa (RN-007).
 DIAS_SEXTA_SANTA_ANTES_DA_PASCOA = 2
+
+# Categorias da política (RN-010).
+CATEGORIAS = ("alimentacao", "transporte_urbano", "hospedagem")

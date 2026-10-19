@@ -51,7 +51,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn015_duplicatas.py`
   - **Commit:**
 
-- [ ] **T-008** — Categorias da política
+- [x] **T-008** — Categorias da política
   - **Atende:** RN-010, AMB-013, AMB-017
   - **Aceite:** `tests/test_rn010_categorias.py`
   - **Commit:**

@@ -1,6 +1,9 @@
 """Regras que decidem a situação de cada item (etapas 3 a 6 da §8 da spec)."""
 
+import re
+
 from motor.modelo import Ocorrencia
+from motor.politica import CATEGORIAS
 from motor.texto import normalizar
 
 
@@ -55,3 +58,22 @@ def duplicatas(despesas, excluidas=frozenset()):
                 "desconsiderado", "duplicata", "RN-015", original.id
             )
     return ocorrencias
+
+
+def _forma_da_categoria(texto):
+    return re.sub(r"\s+", " ", re.sub(r"[_-]", " ", normalizar(texto))).strip()
+
+
+_CATEGORIAS_POR_FORMA = {_forma_da_categoria(c): c for c in CATEGORIAS}
+
+
+def reconhecer_categoria(texto):
+    """RN-010: categoria da política correspondente ao texto informado, ou None."""
+    return _CATEGORIAS_POR_FORMA.get(_forma_da_categoria(texto))
+
+
+def categoria_fora_da_politica(despesa):
+    """RN-010: recusa o item cuja categoria não é da política."""
+    if reconhecer_categoria(despesa.categoria_informada) is None:
+        return Ocorrencia("recusado", "categoria_fora_da_politica", "RN-010")
+    return None
