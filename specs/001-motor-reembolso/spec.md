@@ -1,6 +1,6 @@
 # Spec — Motor de Cálculo de Reembolso
 
-**Versão:** 1.0 · **Status:** rascunho · **Última alteração:** 2026-10-18
+**Versão:** 1.0 · **Status:** rascunho · **Última alteração:** 2026-10-19
 
 > **Regra de ouro deste arquivo:** ele descreve o QUÊ e o PORQUÊ. Nenhuma linha
 > aqui pode citar linguagem, biblioteca, classe, função ou estrutura de pasta.
@@ -381,7 +381,7 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 
 **Regra:** são dias não úteis o sábado, o domingo e os feriados nacionais: 01/01, 21/04, 01/05, 07/09, 12/10, 02/11, 15/11, 20/11 e 25/12, além da Sexta-feira Santa (dois dias antes do Domingo de Páscoa do ano). Feriados estaduais e municipais não são considerados. A despesa com data em dia não útil não é reembolsada: fica com valor reembolsado de R$ 0,00, é apresentada como pendente de revisão por dia não útil e não entra na soma do dia (RN-001). O nome da situação na saída é definido na AMB-031.
 
-**Exceção:** um item de hospedagem com data de entrada em dia não útil segue as demais regras se os dias cobertos pela estadia (RN-013) incluem pelo menos um dia útil. Alimentação e transporte urbano em dia não útil ficam pendentes de revisão mesmo em dia de viagem.
+**Exceção:** um item de hospedagem com data de entrada em dia não útil segue as demais regras se os dias cobertos pela estadia (RN-013) incluem pelo menos um dia útil. Estornos de hospedagem não são estadias: em dia não útil, ficam pendentes de revisão como os demais itens. Alimentação e transporte urbano em dia não útil ficam pendentes de revisão mesmo em dia de viagem.
 **Origem:** AMB-019, AMB-008.
 **Aceite:**
 - d-012 (2026-07-18, sábado, alimentação, R$ 47,20) → pendente de revisão, R$ 0,00, fora do total de alimentação de 2026-07-18;
@@ -389,7 +389,8 @@ Itens desconsiderados ou recusados por esta regra não entram na soma do dia (RN
 - despesa em 2026-02-17 (terça-feira de Carnaval) ou em 2026-07-20 (segunda-feira) → dia útil, segue as demais regras;
 - hospedagem com entrada em 2026-07-19 (domingo), 1 diária → cobre 19 e 20/07 (segunda) → segue as demais regras;
 - hospedagem com entrada em 2026-07-18 (sábado), 1 diária → cobre 18 e 19/07, sem dia útil → pendente de revisão;
-- jantar em 2026-07-19 (domingo), durante essa estadia → pendente de revisão.
+- jantar em 2026-07-19 (domingo), durante essa estadia → pendente de revisão;
+- estorno de hospedagem em 2026-07-18 (sábado), "Estorno 2 diárias", −R$ 80,00 → pendente de revisão.
 
 ### RN-008 — Despesa de valor zero
 
@@ -505,12 +506,13 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 
 ### RN-017 — Hospedagens sobrepostas
 
-**Regra:** as noites de uma estadia são a data de entrada e os dias seguintes, uma noite por diária (RN-004); o dia de saída não é noite. Itens de hospedagem que têm pelo menos uma noite em comum ficam todos pendentes de revisão por sobreposição de hospedagem, com R$ 0,00.
+**Regra:** as noites de uma estadia são a data de entrada e os dias seguintes, uma noite por diária (RN-004); o dia de saída não é noite. Itens de hospedagem que têm pelo menos uma noite em comum ficam todos pendentes de revisão por sobreposição de hospedagem, com R$ 0,00. Estornos de hospedagem (valor negativo) não são estadias e não entram nesta verificação.
 **Origem:** AMB-018.
 **Aceite:**
 - A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-21, 1 diária) → a noite de 21/07 é comum → os dois ficam pendentes;
 - A (entrada em 2026-07-20, 2 diárias) e B (entrada em 2026-07-22, 1 diária) → não há noite em comum → seguem as demais regras;
-- d-010 (noites de 14 e 15/07) e d-013 (noites de 22 a 24/07) → não há sobreposição.
+- d-010 (noites de 14 e 15/07) e d-013 (noites de 22 a 24/07) → não há sobreposição;
+- hospedagem com entrada em 2026-07-14, 2 diárias, e estorno de hospedagem em 2026-07-14 → não há sobreposição; o estorno segue a RN-016.
 
 ### RN-018 — Entrada inválida
 

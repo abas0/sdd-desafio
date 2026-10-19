@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-012 — Estorno de hospedagem não é estadia · 2026-10-19
+
+**Gatilho:** contradição encontrada ao implementar a T-014. Pela letra da RN-017, a hospedagem e o estorno com a mesma data de entrada teriam uma noite em comum e ficariam pendentes por sobreposição, o que tornaria impossível o aceite da RN-016 (R$ 480,00 − R$ 80,00 → R$ 400,00).
+
+**O que mudou na spec:** RN-017: estornos de hospedagem não entram na verificação de sobreposição. RN-007: estornos de hospedagem não recebem a exceção de estadia que cobre dia útil. Cada regra ganhou um aceite.
+
+**Por quê:** o estorno é uma devolução, não uma estadia. Tratá-lo como estadia anulava o abatimento de estornos de hospedagem (RN-016).
+
+**O que isso invalidou:** a leitura de que todo item de hospedagem é uma estadia. A T-012 (`2e2861d`) aplicava a exceção da RN-007 a estornos de hospedagem; o código e o teste precisam de ajuste.
+
+**Tasks afetadas:** T-012 (correção) e T-014 (ainda não implementada; já segue a regra nova).
+
+**Custo:** 2 arquivos da spec (`spec.md`, `DECISIONS.md`), mais a correção da T-012: uma função e um teste.
+
+---
+
 ## D-011 — Problema, objetivo, casos de borda e critérios de aceite · 2026-10-18
 
 **Gatilho:** preenchimento das seções restantes da spec depois de todas as ambiguidades decididas.
