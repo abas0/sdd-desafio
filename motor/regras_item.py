@@ -5,7 +5,7 @@ import re
 from motor.calendario import dia_nao_util
 from motor.diarias import dias_cobertos_pela_estadia
 from motor.modelo import Ocorrencia
-from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA
+from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA, PATAMAR_NOTA_FISCAL
 from motor.texto import contem_alguma, normalizar
 
 
@@ -120,3 +120,10 @@ def pendente_por_dia_nao_util(despesa):
     ):
         return None
     return Ocorrencia("pendente", "dia_nao_util", "RN-007")
+
+
+def pendente_por_nota_fiscal(despesa):
+    """RN-012: item de valor maior que o patamar, sem nota, fica pendente."""
+    if despesa.valor > PATAMAR_NOTA_FISCAL and not despesa.tem_nota_fiscal:
+        return Ocorrencia("pendente", "nota_fiscal_ausente", "RN-012")
+    return None

@@ -27,3 +27,6 @@ PALAVRAS_POR_CATEGORIA = {
     "transporte_urbano": ("corrida", "táxi", "uber", "ônibus", "metrô"),
     "hospedagem": ("hotel", "pousada", "hostel", "airbnb", "diária", "noite"),
 }
+
+# Nota fiscal obrigatória para valor maior que este, em centavos (RN-012).
+PATAMAR_NOTA_FISCAL = 10000

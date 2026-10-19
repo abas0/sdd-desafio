@@ -76,7 +76,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn007_dia_nao_util.py`
   - **Commit:**
 
-- [ ] **T-013** — Nota fiscal obrigatória
+- [x] **T-013** — Nota fiscal obrigatória
   - **Atende:** RN-012, AMB-005, AMB-006, AMB-007
   - **Aceite:** `tests/test_rn012_nota_fiscal.py`
   - **Commit:**
