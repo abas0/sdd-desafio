@@ -34,7 +34,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn007_calendario.py`
   - **Commit:**
 
-- [ ] **T-005** — Número de diárias lido na descrição
+- [x] **T-005** — Número de diárias lido na descrição
   - **Atende:** RN-004 (parte), AMB-003
   - **Aceite:** `tests/test_rn004_diarias.py`
   - **Commit:**
