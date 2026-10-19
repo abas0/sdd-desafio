@@ -96,22 +96,22 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 - [x] **T-016** — Dias de viagem
   - **Atende:** RN-013, AMB-008, AMB-009, AMB-028
   - **Aceite:** `tests/test_rn013_viagem.py`
-  - **Commit:**
+  - **Commit:** `829677b`
 
 - [x] **T-017** — Soma do dia, limite e valor apurado por dia
   - **Atende:** RN-001, RN-002, RN-003, AMB-001, AMB-002, AMB-004
   - **Aceite:** `tests/test_rn001_limite_diario.py`, `tests/test_rn002_teto.py`, `tests/test_rn003_valor_por_dia.py`
-  - **Commit:**
+  - **Commit:** `8f04e7c`
 
 - [x] **T-018** — Teto de hospedagem
   - **Atende:** RN-004, RN-002
   - **Aceite:** `tests/test_rn004_teto_hospedagem.py`
-  - **Commit:**
+  - **Commit:** `9ca5c0f`
 
 - [x] **T-019** — Estornos
   - **Atende:** RN-016, AMB-015
   - **Aceite:** `tests/test_rn016_estornos.py`
-  - **Commit:**
+  - **Commit:** `f0ed8d6`
 
 ## Fase 4 — Saída e CLI
 
@@ -156,5 +156,11 @@ Preenchida ao fechar cada fase.
 | RN-015, AMB-012 | T-007 | `tests/test_rn015_duplicatas.py` |
 | RN-017, AMB-018 | T-014 | `tests/test_rn017_sobreposicao.py` |
 | RN-019, AMB-016, AMB-025 | T-015 | `tests/test_rn019_ordem_e_motivos.py` |
+| RN-001, AMB-001 | T-017 | `tests/test_rn001_limite_diario.py` |
+| RN-002, AMB-004 | T-017 | `tests/test_rn002_teto.py` |
+| RN-003, AMB-002 | T-017 | `tests/test_rn003_valor_por_dia.py` |
+| RN-004 (teto) | T-018 | `tests/test_rn004_teto_hospedagem.py` |
+| RN-013, AMB-008, AMB-009, AMB-028 | T-016 | `tests/test_rn013_viagem.py` |
+| RN-016, AMB-015 | T-019 | `tests/test_rn016_estornos.py` |
 
 AMB-022 e AMB-023 são premissas, sem comportamento a testar: não têm task.
