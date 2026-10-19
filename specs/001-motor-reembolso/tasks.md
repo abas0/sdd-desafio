@@ -108,7 +108,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn004_teto_hospedagem.py`
   - **Commit:**
 
-- [ ] **T-019** — Estornos
+- [x] **T-019** — Estornos
   - **Atende:** RN-016, AMB-015
   - **Aceite:** `tests/test_rn016_estornos.py`
   - **Commit:**

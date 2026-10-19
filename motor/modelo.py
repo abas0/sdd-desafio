@@ -33,7 +33,7 @@ class Ocorrencia:
     """Regra que se aplica a um item e a situação que ela determina (§4 da spec)."""
 
     situacao: str
-    motivo: str
+    motivo: str | None
     regra: str
     referencia: str | None = None
 

@@ -191,3 +191,40 @@ def avaliar_situacoes(entrada):
         outros = tuple(o.motivo for o in ocorrencias[1:])
         situacoes.append(SituacaoItem(d, principal, outros))
     return situacoes
+
+
+def vincular_estornos_de_hospedagem(situacoes):
+    """Etapa 6 da §8 da spec (RN-016): cada estorno de hospedagem ainda sem ocorrência é
+    vinculado à estadia com a mesma data de entrada. Devolve as situações atualizadas e
+    {posição da estadia: estornos a abater}."""
+    estadias_por_data = {}
+    for s in situacoes:
+        if eh_estadia(s.despesa):
+            estadias_por_data.setdefault(s.despesa.data, []).append(s)
+
+    abatimentos = {}
+    atualizadas = []
+    for s in situacoes:
+        d = s.despesa
+        estorno = (
+            s.ocorrencia is None
+            and d.valor < 0
+            and reconhecer_categoria(d.categoria_informada) == "hospedagem"
+        )
+        if not estorno:
+            atualizadas.append(s)
+            continue
+        estadias = estadias_por_data.get(d.data)
+        if not estadias:
+            ocorrencia = Ocorrencia("pendente", "estorno_sem_hospedagem", "RN-016")
+        else:
+            estadia = estadias[0]
+            if estadia.ocorrencia is not None:
+                ocorrencia = Ocorrencia(
+                    estadia.ocorrencia.situacao, estadia.ocorrencia.motivo, "RN-016", estadia.despesa.id
+                )
+            else:
+                ocorrencia = Ocorrencia("abatido", None, "RN-016", estadia.despesa.id)
+                abatimentos.setdefault(estadia.despesa.posicao, []).append(d)
+        atualizadas.append(SituacaoItem(d, ocorrencia, s.outros_motivos))
+    return atualizadas, {p: tuple(e) for p, e in abatimentos.items()}
