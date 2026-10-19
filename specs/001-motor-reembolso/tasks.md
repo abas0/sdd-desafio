@@ -44,52 +44,52 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 - [x] **T-006** — Mesmo conteúdo e identificador repetido
   - **Atende:** RN-005, RN-006, AMB-011, AMB-029
   - **Aceite:** `tests/test_rn005_mesmo_conteudo.py`, `tests/test_rn006_identificador_repetido.py`
-  - **Commit:**
+  - **Commit:** `e888a81`
 
 - [x] **T-007** — Duplicatas
   - **Atende:** RN-015, AMB-012
   - **Aceite:** `tests/test_rn015_duplicatas.py`
-  - **Commit:**
+  - **Commit:** `5239b5c`
 
 - [x] **T-008** — Categorias da política
   - **Atende:** RN-010, AMB-013, AMB-017
   - **Aceite:** `tests/test_rn010_categorias.py`
-  - **Commit:**
+  - **Commit:** `32f2157`
 
 - [x] **T-009** — Descrição compatível com a categoria
   - **Atende:** RN-011, AMB-030
   - **Aceite:** `tests/test_rn011_descricao.py`
-  - **Commit:**
+  - **Commit:** `2c08444`
 
 - [x] **T-010** — Período de competência
   - **Atende:** RN-014, AMB-010
   - **Aceite:** `tests/test_rn014_periodo.py`
-  - **Commit:**
+  - **Commit:** `2c5c4d0`
 
 - [x] **T-011** — Valor zero
   - **Atende:** RN-008, AMB-020
   - **Aceite:** `tests/test_rn008_valor_zero.py`
-  - **Commit:**
+  - **Commit:** `44f7b3d`
 
 - [x] **T-012** — Dia não útil, com a exceção para hospedagem
   - **Atende:** RN-007, AMB-019
   - **Aceite:** `tests/test_rn007_dia_nao_util.py`
-  - **Commit:**
+  - **Commit:** `2e2861d`; correção `c66a602` (D-012)
 
 - [x] **T-013** — Nota fiscal obrigatória
   - **Atende:** RN-012, AMB-005, AMB-006, AMB-007
   - **Aceite:** `tests/test_rn012_nota_fiscal.py`
-  - **Commit:**
+  - **Commit:** `8cf8ee6`
 
 - [x] **T-014** — Hospedagens sobrepostas
   - **Atende:** RN-017, AMB-018
   - **Aceite:** `tests/test_rn017_sobreposicao.py`
-  - **Commit:**
+  - **Commit:** `6cc1318`
 
 - [x] **T-015** — Ordem das regras e `outros_motivos`
   - **Atende:** RN-019, AMB-016, AMB-025
   - **Aceite:** `tests/test_rn019_ordem_e_motivos.py`
-  - **Commit:**
+  - **Commit:** `ac1bc87`
 
 ## Fase 3 — Valores
 
@@ -145,5 +145,16 @@ Preenchida ao fechar cada fase.
 | RN-009, AMB-014 | T-003 | `tests/test_rn009_arredondamento.py` |
 | RN-018, AMB-021, AMB-032, AMB-033 | T-002 | `tests/test_rn018_entrada_invalida.py` |
 | RN-014 (período inválido) | T-002 | `tests/test_rn018_entrada_invalida.py::test_rn018_periodo_diferente_do_mes_da_competencia_e_invalido` |
+| RN-005, AMB-011 | T-006 | `tests/test_rn005_mesmo_conteudo.py` |
+| RN-006, AMB-029 | T-006 | `tests/test_rn006_identificador_repetido.py` |
+| RN-007 (dia não útil), AMB-019 | T-012 | `tests/test_rn007_dia_nao_util.py` |
+| RN-008, AMB-020 | T-011 | `tests/test_rn008_valor_zero.py` |
+| RN-010, AMB-013, AMB-017 | T-008 | `tests/test_rn010_categorias.py` |
+| RN-011, AMB-030 | T-009 | `tests/test_rn011_descricao.py` |
+| RN-012, AMB-005, AMB-006, AMB-007 | T-013 | `tests/test_rn012_nota_fiscal.py` |
+| RN-014, AMB-010 | T-010 | `tests/test_rn014_periodo.py` |
+| RN-015, AMB-012 | T-007 | `tests/test_rn015_duplicatas.py` |
+| RN-017, AMB-018 | T-014 | `tests/test_rn017_sobreposicao.py` |
+| RN-019, AMB-016, AMB-025 | T-015 | `tests/test_rn019_ordem_e_motivos.py` |
 
 AMB-022 e AMB-023 são premissas, sem comportamento a testar: não têm task.
