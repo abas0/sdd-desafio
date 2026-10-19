@@ -56,7 +56,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn010_categorias.py`
   - **Commit:**
 
-- [ ] **T-009** — Descrição compatível com a categoria
+- [x] **T-009** — Descrição compatível com a categoria
   - **Atende:** RN-011, AMB-030
   - **Aceite:** `tests/test_rn011_descricao.py`
   - **Commit:**

@@ -3,8 +3,8 @@
 import re
 
 from motor.modelo import Ocorrencia
-from motor.politica import CATEGORIAS
-from motor.texto import normalizar
+from motor.politica import CATEGORIAS, PALAVRAS_POR_CATEGORIA
+from motor.texto import contem_alguma, normalizar
 
 
 def mesmo_conteudo(a, b):
@@ -76,4 +76,20 @@ def categoria_fora_da_politica(despesa):
     """RN-010: recusa o item cuja categoria não é da política."""
     if reconhecer_categoria(despesa.categoria_informada) is None:
         return Ocorrencia("recusado", "categoria_fora_da_politica", "RN-010")
+    return None
+
+
+def descricao_incompativel(despesa):
+    """RN-011: recusa o item cuja descrição só tem palavras de outra categoria."""
+    categoria = reconhecer_categoria(despesa.categoria_informada)
+    if categoria is None:
+        return None
+    da_categoria = contem_alguma(despesa.descricao, PALAVRAS_POR_CATEGORIA[categoria])
+    de_outra = any(
+        contem_alguma(despesa.descricao, lista)
+        for outra, lista in PALAVRAS_POR_CATEGORIA.items()
+        if outra != categoria
+    )
+    if de_outra and not da_categoria:
+        return Ocorrencia("recusado", "descricao_incompativel", "RN-011")
     return None

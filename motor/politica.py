@@ -20,3 +20,10 @@ DIAS_SEXTA_SANTA_ANTES_DA_PASCOA = 2
 
 # Categorias da política (RN-010).
 CATEGORIAS = ("alimentacao", "transporte_urbano", "hospedagem")
+
+# Palavras associadas a cada categoria, na descrição (RN-011).
+PALAVRAS_POR_CATEGORIA = {
+    "alimentacao": ("almoço", "jantar", "café", "lanche", "refeição", "restaurante", "padaria"),
+    "transporte_urbano": ("corrida", "táxi", "uber", "ônibus", "metrô"),
+    "hospedagem": ("hotel", "pousada", "hostel", "airbnb", "diária", "noite"),
+}
