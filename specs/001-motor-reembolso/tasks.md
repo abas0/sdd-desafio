@@ -29,7 +29,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_rn009_arredondamento.py`
   - **Commit:**
 
-- [ ] **T-004** — Calendário: fins de semana, feriados nacionais e Sexta-feira Santa
+- [x] **T-004** — Calendário: fins de semana, feriados nacionais e Sexta-feira Santa
   - **Atende:** RN-007 (parte), AMB-019
   - **Aceite:** `tests/test_rn007_calendario.py`
   - **Commit:**
