@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-014 — Critérios de aceite atendidos · 2026-10-19
+
+**Gatilho:** conclusão das 21 tasks; os 199 testes passam.
+
+**O que mudou na spec:** os oito critérios da §9 foram marcados como atendidos.
+
+**Por quê:** cada critério é verificado por testes: a saída do exemplo igual à da §4 (`tests/test_ponta_a_ponta.py`, `tests/test_saida.py`), os aceites das RN-001 a RN-019 e os casos da §7 (um arquivo de teste por regra em `tests/`), a entrada inválida sem saída (`tests/test_ponta_a_ponta.py`) e a mesma saída para a mesma entrada (`tests/test_ponta_a_ponta.py::test_spec9_mesma_entrada_gera_sempre_a_mesma_saida`).
+
+**O que isso invalidou:** nada.
+
+**Tasks afetadas:** nenhuma.
+
+**Custo:** 2 arquivos da spec (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-013 — Casos de borda do estorno de hospedagem · 2026-10-19
 
 **Gatilho:** dois casos encontrados ao implementar a T-019, que a RN-016 não fixava.

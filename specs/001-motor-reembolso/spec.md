@@ -946,14 +946,14 @@ A situação e o motivo de cada item vêm da primeira regra das etapas 3 a 5 que
 
 O sistema está pronto quando:
 
-- [ ] `<comando> calcular --input exemplos/despesas-exemplo.json --output <saida.json>` grava uma saída igual à do exemplo da §4 em todos os campos, exceto o texto das justificativas.
-- [ ] Cada caso de aceite das RN-001 a RN-019 produz o resultado descrito na regra.
-- [ ] Cada caso da §7 produz o comportamento descrito.
-- [ ] A saída tem um item por despesa da entrada, na mesma ordem, cada um com situação e justificativa.
-- [ ] Nenhum valor reembolsado ultrapassa o limite ou o teto aplicável.
-- [ ] `total_reembolsado` é igual à soma dos totais diários e das hospedagens calculadas.
-- [ ] Com entrada inválida, nenhuma saída é gravada, o problema é informado e o comando termina indicando erro.
-- [ ] A mesma entrada produz sempre a mesma saída.
+- [x] `<comando> calcular --input exemplos/despesas-exemplo.json --output <saida.json>` grava uma saída igual à do exemplo da §4 em todos os campos, exceto o texto das justificativas.
+- [x] Cada caso de aceite das RN-001 a RN-019 produz o resultado descrito na regra.
+- [x] Cada caso da §7 produz o comportamento descrito.
+- [x] A saída tem um item por despesa da entrada, na mesma ordem, cada um com situação e justificativa.
+- [x] Nenhum valor reembolsado ultrapassa o limite ou o teto aplicável.
+- [x] `total_reembolsado` é igual à soma dos totais diários e das hospedagens calculadas.
+- [x] Com entrada inválida, nenhuma saída é gravada, o problema é informado e o comando termina indicando erro.
+- [x] A mesma entrada produz sempre a mesma saída.
 
 ## 10. O que fica em aberto
 
