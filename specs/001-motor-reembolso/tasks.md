@@ -120,7 +120,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
   - **Aceite:** `tests/test_saida.py`
   - **Commit:**
 
-- [ ] **T-021** — Comando `calcular` de ponta a ponta, erro de entrada e README
+- [x] **T-021** — Comando `calcular` de ponta a ponta, erro de entrada e README
   - **Atende:** spec §9, RN-018
   - **Aceite:** `tests/test_ponta_a_ponta.py` (compara a saída do exemplo com o JSON da §4 da spec)
   - **Commit:**
