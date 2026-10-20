@@ -115,7 +115,7 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 
 ## Fase 4 — Saída e CLI
 
-- [ ] **T-020** — Montagem da saída, justificativas, resumo e escritor do JSON
+- [x] **T-020** — Montagem da saída, justificativas, resumo e escritor do JSON
   - **Atende:** spec §4, AMB-024, AMB-026, AMB-027, AMB-031, DT-010
   - **Aceite:** `tests/test_saida.py`
   - **Commit:**
