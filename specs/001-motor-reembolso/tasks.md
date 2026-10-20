@@ -111,19 +111,19 @@ Os testes ficam em `tests/`. O aceite de cada task é "os testes do arquivo indi
 - [x] **T-019** — Estornos
   - **Atende:** RN-016, AMB-015
   - **Aceite:** `tests/test_rn016_estornos.py`
-  - **Commit:** `f0ed8d6`
+  - **Commit:** `f0ed8d6`; teste adicional `d6761a3` (D-013)
 
 ## Fase 4 — Saída e CLI
 
 - [x] **T-020** — Montagem da saída, justificativas, resumo e escritor do JSON
   - **Atende:** spec §4, AMB-024, AMB-026, AMB-027, AMB-031, DT-010
   - **Aceite:** `tests/test_saida.py`
-  - **Commit:**
+  - **Commit:** `1e2909e`
 
 - [x] **T-021** — Comando `calcular` de ponta a ponta, erro de entrada e README
   - **Atende:** spec §9, RN-018
   - **Aceite:** `tests/test_ponta_a_ponta.py` (compara a saída do exemplo com o JSON da §4 da spec)
-  - **Commit:**
+  - **Commit:** `e910888`
 
 ---
 
@@ -162,5 +162,7 @@ Preenchida ao fechar cada fase.
 | RN-004 (teto) | T-018 | `tests/test_rn004_teto_hospedagem.py` |
 | RN-013, AMB-008, AMB-009, AMB-028 | T-016 | `tests/test_rn013_viagem.py` |
 | RN-016, AMB-015 | T-019 | `tests/test_rn016_estornos.py` |
+| §4 (saída), AMB-024, AMB-026, AMB-027, AMB-031 | T-020 | `tests/test_saida.py` |
+| §9 (critérios de aceite), RN-018 (comando) | T-021 | `tests/test_ponta_a_ponta.py` |
+| AMB-022, AMB-023 | — | premissas, sem comportamento a testar |
 
-AMB-022 e AMB-023 são premissas, sem comportamento a testar: não têm task.
