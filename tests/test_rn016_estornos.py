@@ -66,3 +66,11 @@ def test_rn016_estorno_vinculado_a_hospedagem_pendente_acompanha_a_situacao_dela
     o = situacoes[1].ocorrencia
     assert (o.situacao, o.motivo, o.referencia) == ("pendente", "nota_fiscal_ausente", "A")
     assert abatimentos == {}
+
+
+def test_rn016_valor_liquido_negativo_da_hospedagem_reembolsa_zero():
+    hotel = despesa(id="H", data="2026-07-14", categoria="hospedagem", descricao="Hotel - 1 diária", valor="100.00")
+    estorno = despesa(id="E", data="2026-07-14", categoria="hospedagem", descricao="Estorno hotel", valor="-150.00")
+    situacoes, abatimentos = processar_hospedagem(hotel, estorno)
+    calculo = calcular_hospedagem(situacoes[0].despesa, abatimentos[0])
+    assert (calculo.valor_liquido, calculo.valor_reembolsado) == (-5000, 0)
