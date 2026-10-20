@@ -10,6 +10,22 @@ Ordem cronológica inversa: a mais recente primeiro.
 
 ---
 
+## D-013 — Casos de borda do estorno de hospedagem · 2026-10-19
+
+**Gatilho:** dois casos encontrados ao implementar a T-019, que a RN-016 não fixava.
+
+**O que mudou na spec:** RN-016: havendo mais de uma estadia com a mesma data de entrada, o estorno é vinculado à primeira na ordem do arquivo; se o valor líquido da hospedagem ficar negativo, ela recebe R$ 0,00 e o saldo não é descontado de outros itens. Novo aceite para o valor líquido negativo.
+
+**Por quê:** a primeira estadia segue o critério de ordem já usado nas RN-006 e RN-015 (e, com duas estadias na mesma entrada, ambas já ficam pendentes pela RN-017). O valor negativo vira zero pela mesma razão do total do dia: um total negativo não gera cobrança.
+
+**O que isso invalidou:** nada; a implementação da T-019 (`f0ed8d6`) já seguia essas leituras, agora registradas.
+
+**Tasks afetadas:** nenhuma; T-019 já atende.
+
+**Custo:** 2 arquivos da spec (`spec.md`, `DECISIONS.md`).
+
+---
+
 ## D-012 — Estorno de hospedagem não é estadia · 2026-10-19
 
 **Gatilho:** contradição encontrada ao implementar a T-014. Pela letra da RN-017, a hospedagem e o estorno com a mesma data de entrada teriam uma noite em comum e ficariam pendentes por sobreposição, o que tornaria impossível o aceite da RN-016 (R$ 480,00 − R$ 80,00 → R$ 400,00).

@@ -492,7 +492,7 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 
 **Regra:** item de valor negativo é um estorno.
 - **Alimentação e transporte urbano:** o estorno entra na soma do dia da sua categoria (RN-001) e a reduz antes da comparação com o limite (RN-002). Se o total do dia ficar negativo, o valor reembolsado do dia é R$ 0,00, e o saldo negativo não é descontado de outros dias.
-- **Hospedagem:** o estorno é abatido do item de hospedagem com a mesma data de entrada, antes da comparação com o teto (RN-004). Sem hospedagem com essa data de entrada, o estorno fica pendente de revisão, com R$ 0,00. Se a hospedagem correspondente não for reembolsada (pendente, recusada ou desconsiderada), o estorno fica na mesma situação, com referência a ela, e R$ 0,00.
+- **Hospedagem:** o estorno é abatido do item de hospedagem com a mesma data de entrada, antes da comparação com o teto (RN-004). Sem hospedagem com essa data de entrada, o estorno fica pendente de revisão, com R$ 0,00. Se a hospedagem correspondente não for reembolsada (pendente, recusada ou desconsiderada), o estorno fica na mesma situação, com referência a ela, e R$ 0,00. Havendo mais de uma estadia com a mesma data de entrada, o estorno é vinculado à primeira na ordem do arquivo. Se o valor líquido da hospedagem ficar negativo, ela recebe R$ 0,00; o saldo negativo não é descontado de outros itens.
 
 **Origem:** AMB-015.
 **Aceite:**
@@ -502,7 +502,8 @@ Esses itens marcam o dia como de viagem mesmo que não sejam reembolsados (recus
 - d-009 (−R$ 45,00, 2026-07-11, sábado) → pendente de revisão por dia não útil (RN-007);
 - hospedagem com entrada em 2026-07-14, 2 diárias, R$ 480,00, e estorno de hospedagem em 2026-07-14 de −R$ 80,00 → R$ 400,00 líquidos, abaixo do teto de R$ 500,00 → R$ 400,00 reembolsados;
 - estorno de hospedagem em 2026-07-16, sem hospedagem com essa data de entrada → pendente de revisão, R$ 0,00;
-- hospedagem com entrada em 2026-07-22, sem nota, R$ 690,00 (pendente de nota fiscal), e estorno de hospedagem em 2026-07-22 de −R$ 50,00 → o estorno fica pendente de nota fiscal, com referência à hospedagem, R$ 0,00.
+- hospedagem com entrada em 2026-07-22, sem nota, R$ 690,00 (pendente de nota fiscal), e estorno de hospedagem em 2026-07-22 de −R$ 50,00 → o estorno fica pendente de nota fiscal, com referência à hospedagem, R$ 0,00;
+- hospedagem de R$ 100,00 e estorno de hospedagem de −R$ 150,00 com a mesma data de entrada → valor líquido de −R$ 50,00 → R$ 0,00 reembolsados.
 
 ### RN-017 — Hospedagens sobrepostas
 
